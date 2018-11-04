@@ -1,0 +1,11 @@
+main()
+   0: aload_0
+   1: invokevirtual a()
+   4: istore_2
+   5: return
+
+a()
+   0: iconst_1
+   1: istore_1
+   2: iload_1
+   3: ireturn
