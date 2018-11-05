@@ -9,6 +9,7 @@
 
 #endif //VM_FRAME_H
 typedef struct {
+    char* name;
     int *stack;
     int *localPool;
     int pointerStack;

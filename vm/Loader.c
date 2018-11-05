@@ -2,6 +2,7 @@
 // Created by Fin on 04.11.2018.
 //
 #include "Loader.h"
+#include "Frame.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -82,14 +83,38 @@ int split(const char *str, char c, char ***arr) {
     return count;
 }
 
+int createFrame(char **stringSplit, int numberString, Frame **frames) {
+    int counter = 0;
+    for (int i = 0; i < numberString; ++i) {
+        char *string = *(stringSplit + i);
+        if (*string != ' ' && *string != '\r') {
+            counter++;
+        }
+    }
+
+    *frames = malloc(sizeof(Frame) * counter);
+
+    int counterFrames = 0;
+    for (int i = 0; i < numberString; ++i) {
+        char *string = *(stringSplit + i);
+        if (*string != ' ' && *string != '\r') {
+            (*frames)[counterFrames].name = string;
+            counterFrames++;
+        }
+    }
+    return counter;
+}
+
 int main() {
     const char *fileToString = readFile("byte.fn");
 
     char **stringSplit = NULL;
     int numberString = split(fileToString, '\n', &stringSplit);
 
-    for (int i = 0; i < numberString; ++i) {
-        puts(*(stringSplit + i));
-    }
+    Frame *frames = NULL;
+
+    int numberFrames = createFrame(stringSplit, numberString, &frames);
+
+    puts(frames[0].name);
 }
 
