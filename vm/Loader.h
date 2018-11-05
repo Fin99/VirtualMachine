@@ -4,7 +4,8 @@
 
 #ifndef VM_LOADER_H
 #define VM_LOADER_H
-
-#endif //VM_LOADER_H
+#include "Frame.h"
 
 void loadByteCode();
+
+#endif //VM_LOADER_H

@@ -3,10 +3,27 @@
 //
 
 #ifndef VM_INSTRUCTION_H
+
 #define VM_INSTRUCTION_H
 
-#endif //VM_INSTRUCTION_H
+#include "Frame.h"
+
+typedef enum {
+    ALOAD,
+    ILOAD,
+    ICONST,
+    ISTORE,
+    INVOKEVIRTUAL,
+    RETURN,
+    IRETURN
+} TypeInstruction;
+
 
 typedef struct {
-    int a;
+    TypeInstruction type;
+    int numberLine;
+    int arg;
+    Frame frameArg;
 } Instruction;
+
+#endif //VM_INSTRUCTION_H

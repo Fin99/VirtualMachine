@@ -2,16 +2,18 @@
 // Created by Fin on 04.11.2018.
 //
 
-#include "Instruction.h"
 
 #ifndef VM_FRAME_H
+
 #define VM_FRAME_H
 
-#endif //VM_FRAME_H
+struct Instruction;
+
 typedef struct {
-    char* name;
+    char *name;
     int *stack;
     int *localPool;
     int pointerStack;
-    Instruction instructions[];
+    struct Instruction *instructions;
 } Frame;
+#endif //VM_FRAME_H

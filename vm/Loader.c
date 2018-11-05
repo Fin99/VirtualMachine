@@ -2,7 +2,6 @@
 // Created by Fin on 04.11.2018.
 //
 #include "Loader.h"
-#include "Frame.h"
 #include <stdio.h>
 #include <stdlib.h>
 
