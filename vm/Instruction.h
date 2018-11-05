@@ -8,5 +8,5 @@
 #endif //VM_INSTRUCTION_H
 
 typedef struct {
-
+    int a;
 } Instruction;
