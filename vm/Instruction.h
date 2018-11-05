@@ -6,7 +6,7 @@
 
 #define VM_INSTRUCTION_H
 
-#include "Frame.h"
+struct Frame;
 
 typedef enum {
     ALOAD,
@@ -23,7 +23,7 @@ typedef struct {
     TypeInstruction type;
     int numberLine;
     int arg;
-    Frame frameArg;
+    struct Frame *frameArg;
 } Instruction;
 
 #endif //VM_INSTRUCTION_H

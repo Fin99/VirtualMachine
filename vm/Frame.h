@@ -7,13 +7,13 @@
 
 #define VM_FRAME_H
 
-struct Instruction;
+#include "Instruction.h"
 
 typedef struct {
     char *name;
     int *stack;
     int *localPool;
     int pointerStack;
-    struct Instruction *instructions;
+    Instruction *instructions;
 } Frame;
 #endif //VM_FRAME_H

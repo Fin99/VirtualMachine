@@ -33,7 +33,7 @@ int split(const char *str, char c, char ***arr) {
     int count = 1;
     int token_len = 1;
     int i = 0;
-    char *p;
+    const char *p;
     char *t;
 
     p = str;
@@ -50,7 +50,7 @@ int split(const char *str, char c, char ***arr) {
     p = str;
     while (*p != '\0') {
         if (*p == c) {
-            (*arr)[i] = (char *) malloc(sizeof(char) * token_len);
+            (*arr)[i] = (char *) malloc(sizeof(char) * token_len - 1);
             if ((*arr)[i] == NULL)
                 exit(1);
 
@@ -60,7 +60,7 @@ int split(const char *str, char c, char ***arr) {
         p++;
         token_len++;
     }
-    (*arr)[i] = (char *) malloc(sizeof(char) * token_len);
+    (*arr)[i] = (char *) malloc(sizeof(char) * token_len - 1);
     if ((*arr)[i] == NULL)
         exit(1);
 
@@ -72,7 +72,11 @@ int split(const char *str, char c, char ***arr) {
             *t = *p;
             t++;
         } else {
-            *t = '\0';
+            if (*(t - 1) == '\r') {
+                *(t - 1) = '\0';
+            } else {
+                *t = '\0';
+            }
             i++;
             t = ((*arr)[i]);
         }
@@ -82,11 +86,49 @@ int split(const char *str, char c, char ***arr) {
     return count;
 }
 
-int createFrame(char **stringSplit, int numberString, Frame **frames) {
+void createInstruction(const char *string, Instruction instruction) {
+
+    char **splitString = NULL;
+    split(string, ':', &splitString);
+
+    puts(splitString[0]);
+    puts(splitString[1]);
+}
+
+int createInstructions(char **stringSplit, int numberString, int numberStringNameFrame, Instruction **instructions) {
+    int counter = 0;
+    if (numberString == numberStringNameFrame) {
+        return 0;
+    }
+    for (int i = numberStringNameFrame + 1; i < numberString; ++i) {
+        char *string = *(stringSplit + i);
+        if (*string != ' ') {
+            break;
+        } else {
+            counter++;
+        }
+    }
+
+    *instructions = malloc(sizeof(Instruction) * counter);
+    int numberInstructions = 0;
+
+    for (int i = numberStringNameFrame + 1; i < numberString; ++i) {
+        char *string = *(stringSplit + i);
+        if (*string != ' ') {
+            break;
+        } else {
+            createInstruction(string, (*instructions)[numberInstructions]);
+            numberInstructions++;
+        }
+    }
+    return counter;
+}
+
+int createFrames(char **stringSplit, int numberString, Frame **frames) {
     int counter = 0;
     for (int i = 0; i < numberString; ++i) {
         char *string = *(stringSplit + i);
-        if (*string != ' ' && *string != '\r') {
+        if (*string != ' ') {
             counter++;
         }
     }
@@ -96,9 +138,12 @@ int createFrame(char **stringSplit, int numberString, Frame **frames) {
     int counterFrames = 0;
     for (int i = 0; i < numberString; ++i) {
         char *string = *(stringSplit + i);
-        if (*string != ' ' && *string != '\r') {
+        if (*string != ' ') {
             (*frames)[counterFrames].name = string;
             counterFrames++;
+            Instruction *instructions = NULL;
+            i += createInstructions(stringSplit, numberString, i, &instructions);
+            (*frames)[counterFrames].instructions = instructions;
         }
     }
     return counter;
@@ -112,8 +157,10 @@ int main() {
 
     Frame *frames = NULL;
 
-    int numberFrames = createFrame(stringSplit, numberString, &frames);
+    int numberFrames = createFrames(stringSplit, numberString, &frames);
 
-    puts(frames[0].name);
+    puts(frames[1].name);
+
+    return 0;
 }
 
