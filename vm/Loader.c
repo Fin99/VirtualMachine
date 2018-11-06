@@ -87,41 +87,33 @@ int split(const char *str, char c, char ***arr) {
     return count;
 }
 
-void trim(char *s)
-{
+void trim(char *s) {
     // удаляем пробелы и табы с начала строки:
-    int i=0,j;
-    while((s[i]==' ')||(s[i]=='\t'))
-    {
+    int i = 0, j;
+    while ((s[i] == ' ') || (s[i] == '\t')) {
         i++;
     }
-    if(i>0)
-    {
-        for(j=0; j < strlen(s); j++)
-        {
-            s[j]=s[j+i];
+    if (i > 0) {
+        for (j = 0; j < strlen(s); j++) {
+            s[j] = s[j + i];
         }
-        s[j]='\0';
+        s[j] = '\0';
     }
 
     // удаляем пробелы и табы с конца строки:
-    i=strlen(s)-1;
-    while((s[i]==' ')||(s[i]=='\t'))
-    {
+    i = strlen(s) - 1;
+    while ((s[i] == ' ') || (s[i] == '\t')) {
         i--;
     }
-    if(i < (strlen(s)-1))
-    {
-        s[i+1]='\0';
+    if (i < (strlen(s) - 1)) {
+        s[i + 1] = '\0';
     }
 }
 
-void setTypeInstruction(char *string, Instruction *ptr) {
+void setTypeInstruction(char *string, Instruction *ptr, Frame *frames) {
     char **splitString = NULL;
-    split(string, ':', &splitString);//trim
+    split(string, ':', &splitString);
     trim(splitString[1]);
-//    puts(splitString[0]);
-//    puts(splitString[1]);
 
     char **splitString1 = NULL;
     split(splitString[1], ' ', &splitString1);
@@ -131,20 +123,35 @@ void setTypeInstruction(char *string, Instruction *ptr) {
 
     if (!strcmp(splitString2[0], "aload")) {
         ptr->type = ALOAD;
+        ptr->arg = strtol(splitString2[1], NULL, 10);
     } else if (!strcmp(splitString2[0], "invokevirtual")) {
         ptr->type = INVOKEVIRTUAL;
+        int i = 0;
+        while (1) {
+            if (!strcmp(frames[i].name, splitString1[1])) {
+                ptr->frameArg = &frames[i];
+                break;
+            }
+            i++;
+        }
     } else if (!strcmp(splitString2[0], "istore")) {
         ptr->type = ISTORE;
+        ptr->arg = strtol(splitString2[1], NULL, 10);
     } else if (!strcmp(splitString2[0], "return")) {
         ptr->type = RETURN;
     } else if (!strcmp(splitString2[0], "iconst")) {
         ptr->type = ICONST;
+        ptr->arg = strtol(splitString2[1], NULL, 10);
     } else if (!strcmp(splitString2[0], "iload")) {
         ptr->type = ILOAD;
+        ptr->arg = strtol(splitString2[1], NULL, 10);
     } else if (!strcmp(splitString2[0], "ireturn")) {
         ptr->type = IRETURN;
     }
-    printf("%d\n", ptr->type);
+    printf("%li ", ptr->numberLine);
+    printf("%d ", ptr->type);
+    printf("%li ", ptr->arg);
+    printf("%p\n", ptr->frameArg);
 }
 
 void setNumberLineInstruction(const char *string, Instruction *instruction) {
@@ -153,11 +160,10 @@ void setNumberLineInstruction(const char *string, Instruction *instruction) {
     split(string, ':', &splitString);
 
     instruction->numberLine = strtol(splitString[0], NULL, 10);
-
-//    printf("%li", instruction->numberLine);
 }
 
-int createInstructions(char **stringSplit, int numberString, int numberStringNameFrame, Instruction **instructions) {
+int createInstructions(char **stringSplit, int numberString, int numberStringNameFrame, Instruction **instructions,
+                       Frame *frames) {
     int counter = 0;
     if (numberString == numberStringNameFrame) {
         return 0;
@@ -180,7 +186,7 @@ int createInstructions(char **stringSplit, int numberString, int numberStringNam
             break;
         } else {
             setNumberLineInstruction(string, &(*instructions)[numberInstructions]);
-            setTypeInstruction(string, &(*instructions)[numberInstructions]);
+            setTypeInstruction(string, &(*instructions)[numberInstructions], frames);
             numberInstructions++;
         }
     }
@@ -204,9 +210,18 @@ int createFrames(char **stringSplit, int numberString, Frame **frames) {
         if (*string != ' ') {
             (*frames)[counterFrames].name = string;
             counterFrames++;
+        }
+    }
+
+    counterFrames = 0;
+    for (int i = 0; i < numberString; ++i) {
+        char *string = *(stringSplit + i);
+        if (*string != ' ') {
             Instruction *instructions = NULL;
-            i += createInstructions(stringSplit, numberString, i, &instructions);
+            i += createInstructions(stringSplit, numberString, i, &instructions, *frames);
             (*frames)[counterFrames].instructions = instructions;
+
+            counterFrames++;
         }
     }
     return counter;
