@@ -4,6 +4,7 @@
 #include "Loader.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 const char *readFile(const char *const filename) {
     char *source = NULL;
@@ -86,14 +87,74 @@ int split(const char *str, char c, char ***arr) {
     return count;
 }
 
+void trim(char *s)
+{
+    // удаляем пробелы и табы с начала строки:
+    int i=0,j;
+    while((s[i]==' ')||(s[i]=='\t'))
+    {
+        i++;
+    }
+    if(i>0)
+    {
+        for(j=0; j < strlen(s); j++)
+        {
+            s[j]=s[j+i];
+        }
+        s[j]='\0';
+    }
+
+    // удаляем пробелы и табы с конца строки:
+    i=strlen(s)-1;
+    while((s[i]==' ')||(s[i]=='\t'))
+    {
+        i--;
+    }
+    if(i < (strlen(s)-1))
+    {
+        s[i+1]='\0';
+    }
+}
+
+void setTypeInstruction(char *string, Instruction *ptr) {
+    char **splitString = NULL;
+    split(string, ':', &splitString);//trim
+    trim(splitString[1]);
+//    puts(splitString[0]);
+//    puts(splitString[1]);
+
+    char **splitString1 = NULL;
+    split(splitString[1], ' ', &splitString1);
+
+    char **splitString2 = NULL;
+    split(splitString1[0], '_', &splitString2);
+
+    if (!strcmp(splitString2[0], "aload")) {
+        ptr->type = ALOAD;
+    } else if (!strcmp(splitString2[0], "invokevirtual")) {
+        ptr->type = INVOKEVIRTUAL;
+    } else if (!strcmp(splitString2[0], "istore")) {
+        ptr->type = ISTORE;
+    } else if (!strcmp(splitString2[0], "return")) {
+        ptr->type = RETURN;
+    } else if (!strcmp(splitString2[0], "iconst")) {
+        ptr->type = ICONST;
+    } else if (!strcmp(splitString2[0], "iload")) {
+        ptr->type = ILOAD;
+    } else if (!strcmp(splitString2[0], "ireturn")) {
+        ptr->type = IRETURN;
+    }
+    printf("%d\n", ptr->type);
+}
+
 void setNumberLineInstruction(const char *string, Instruction *instruction) {
 
     char **splitString = NULL;
     split(string, ':', &splitString);
 
     instruction->numberLine = strtol(splitString[0], NULL, 10);
+
 //    printf("%li", instruction->numberLine);
-//    puts(splitString[1]);
 }
 
 int createInstructions(char **stringSplit, int numberString, int numberStringNameFrame, Instruction **instructions) {
@@ -119,6 +180,7 @@ int createInstructions(char **stringSplit, int numberString, int numberStringNam
             break;
         } else {
             setNumberLineInstruction(string, &(*instructions)[numberInstructions]);
+            setTypeInstruction(string, &(*instructions)[numberInstructions]);
             numberInstructions++;
         }
     }
@@ -159,8 +221,6 @@ int main() {
     Frame *frames = NULL;
 
     int numberFrames = createFrames(stringSplit, numberString, &frames);
-
-    puts(frames[1].name);
 
     return 0;
 }
