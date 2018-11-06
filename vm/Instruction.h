@@ -21,7 +21,7 @@ typedef enum {
 
 typedef struct {
     TypeInstruction type;
-    int numberLine;
+    long numberLine;
     int arg;
     struct Frame *frameArg;
 } Instruction;

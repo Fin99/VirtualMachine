@@ -86,13 +86,14 @@ int split(const char *str, char c, char ***arr) {
     return count;
 }
 
-void createInstruction(const char *string, Instruction instruction) {
+void setNumberLineInstruction(const char *string, Instruction *instruction) {
 
     char **splitString = NULL;
     split(string, ':', &splitString);
 
-    puts(splitString[0]);
-    puts(splitString[1]);
+    instruction->numberLine = strtol(splitString[0], NULL, 10);
+//    printf("%li", instruction->numberLine);
+//    puts(splitString[1]);
 }
 
 int createInstructions(char **stringSplit, int numberString, int numberStringNameFrame, Instruction **instructions) {
@@ -117,7 +118,7 @@ int createInstructions(char **stringSplit, int numberString, int numberStringNam
         if (*string != ' ') {
             break;
         } else {
-            createInstruction(string, (*instructions)[numberInstructions]);
+            setNumberLineInstruction(string, &(*instructions)[numberInstructions]);
             numberInstructions++;
         }
     }
