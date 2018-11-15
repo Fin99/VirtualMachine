@@ -26,4 +26,6 @@ typedef struct {
     struct Frame *frameArg;
 } Instruction;
 
+void execute(struct Frame);
+
 #endif //VM_INSTRUCTION_H

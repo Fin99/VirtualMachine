@@ -16,4 +16,7 @@ typedef struct {
     int pointerStack;
     Instruction *instructions;
 } Frame;
+
+void go(Frame);
+
 #endif //VM_FRAME_H
