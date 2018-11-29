@@ -5,6 +5,6 @@
 #ifndef VM_FILE_H
 #define VM_FILE_H
 
-const char *readFile(const char *const filename);
+const char *read_file(const char *const file_name);
 
 #endif //VM_FILE_H

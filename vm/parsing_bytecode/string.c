@@ -4,7 +4,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "String.h"
+#include "string.h"
 
 int split(const char *str, char c, char ***arr) {
     int count = 1;
@@ -77,7 +77,7 @@ void trim(char *s) {
     }
 
     // удаляем пробелы и табы с конца строки:
-    i = strlen(s) - 1;
+    i = (int) (strlen(s) - 1);
     while ((s[i] == ' ') || (s[i] == '\t')) {
         i--;
     }

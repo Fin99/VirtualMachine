@@ -6,7 +6,7 @@
 
 #define VM_INSTRUCTION_H
 
-struct Frame;
+struct frame;
 
 typedef enum {
     ALOAD,
@@ -21,16 +21,16 @@ typedef enum {
 
     RETURN,
     IRETURN
-} TypeInstruction;
+} type_instruction;
 
 
 typedef struct {
-    TypeInstruction type;
-    int numberLine;
+    type_instruction type;
+    int number_line;
     int arg;
-    struct Frame *frameArg;
-} Instruction;
+    struct frame *frame_arg;
+} instruction;
 
-void execute(struct Frame*, Instruction*);
+void execute(struct frame*, instruction*);
 
 #endif //VM_INSTRUCTION_H

@@ -5,6 +5,8 @@
 #ifndef VM_VM_H
 #define VM_VM_H
 
-#include "Frame.h"
+#include "frame.h"
+
+void start(const char *const file_name);
 
 #endif //VM_VM_H

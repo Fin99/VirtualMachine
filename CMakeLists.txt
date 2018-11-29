@@ -3,4 +3,4 @@ project(VM)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(VM vm/VM.h vm/VM.c vm/ConstantPool.h vm/Frame.h vm/parsing_bytecode/Loader.h vm/parsing_bytecode/Loader.c vm/Instruction.h vm/Frame.c vm/Instruction.c vm/parsing_bytecode/String.c vm/parsing_bytecode/String.h vm/parsing_bytecode/File.c vm/parsing_bytecode/File.h)
+add_executable(VM vm/VM.h vm/VM.c vm/frame.h vm/parsing_bytecode/loader.h vm/parsing_bytecode/loader.c vm/instruction.h vm/frame.c vm/instruction.c vm/parsing_bytecode/string.c vm/parsing_bytecode/string.h vm/parsing_bytecode/file.c vm/parsing_bytecode/file.h)
