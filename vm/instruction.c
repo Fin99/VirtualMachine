@@ -22,16 +22,6 @@ void iadd(frame *frame) {
     frame->pointer_stack--;
 }
 
-void invokeVirtual(frame *parent_frame, frame *child_frame) {
-    run(child_frame);
-}
-
-//int ireturn(frame *frame) {
-//    int ret = frame->stack[frame->pointer_stack];
-//    frame->pointer_stack--;
-//    return ret;
-//}
-
 void execute(frame *frame, instruction *instruction) {
     switch (instruction->type) {
         case ICONST:
@@ -40,20 +30,22 @@ void execute(frame *frame, instruction *instruction) {
         case ISTORE:
             istore(frame, instruction->arg);
             break;
-//        case ALOAD:
+        case ALOAD:
 //            break;
         case ILOAD:
             iload(frame, instruction->arg);
             break;
         case INVOKEVIRTUAL:
-            invokeVirtual(frame, instruction->frame_arg);
+//            invokeVirtual(frame, instruction->frame_arg);
             break;
         case IADD:
             iadd(frame);
             break;
-//        case RETURN:
-//            break;
-//        case IRETURN:
-//            break;
+        case RETURN:
+//
+            break;
+        case IRETURN:
+//
+            break;
     }
 }

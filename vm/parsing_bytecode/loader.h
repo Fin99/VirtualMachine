@@ -9,7 +9,7 @@
 #include "string.h"
 #include "file.h"
 
-frame *load_byte_code(const char *const file_to_string, int *number_frames);
+frame *load_byte_code(const char *file_to_string, int *number_frames);
 
 int create_frames(char **file_split, int number_string, frame **frames);
 

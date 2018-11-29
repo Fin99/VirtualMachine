@@ -20,8 +20,8 @@ frame *find_main_frame(frame *frames, int number_frames){
     return main;
 }
 
-int start(const char *const file_name) {
-    const char *file_to_string = read_file("byte.fn");
+int start(const char *file_name) {
+    const char *file_to_string = read_file(file_name);
 
     int number_frames;
     frame* frames = load_byte_code(file_to_string, &number_frames);
@@ -30,24 +30,10 @@ int start(const char *const file_name) {
 
     run(main);
 
-    return main->stack[frames->pointer_stack];
+    //return value on top of stack
+    return main->stack[0];
 }
 
 int main() {
     return start(FILE_NAME);
-
-//    for (int i = 0; i < number_frames; ++i) {
-//        printf("%i:\n", i);
-//        printf("Name - %s\n", frames[i].name);
-//        printf("instruction size - %i\n", frames[i].instructions_size);
-//        frame frame = frames[i];
-//        for (int j = 0; j < frames[i].instructions_size; ++j) {
-//            printf("\t%i: %i - %i, %p\n", frame.instructions[j].number_line, frame.instructions[j].type,
-//                   frame.instructions[j].arg, frame.instructions[j].frame_arg);
-//        }
-//    }
-//
-//
-//
-//    printf("%i", main->stack[frames->pointer_stack]);
 }

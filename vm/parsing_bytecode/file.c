@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "file.h"
 
-const char *read_file(const char *const file_name) {
+const char *read_file(const char *file_name) {
     char *source = NULL;
     FILE *fp = fopen(file_name, "r");
     if (fp != NULL) {
