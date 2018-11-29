@@ -23,7 +23,7 @@ void iadd(frame *frame) {
 }
 
 void invokeVirtual(frame *parent_frame, frame *child_frame) {
-    go(child_frame);
+    run(child_frame);
 }
 
 //int ireturn(frame *frame) {

@@ -7,6 +7,6 @@
 
 #include "frame.h"
 
-void start(const char *const file_name);
+int start(const char *const file_name);
 
 #endif //VM_VM_H

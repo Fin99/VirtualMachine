@@ -10,37 +10,15 @@
 #define SIZE_LOCAL_POOL 128
 
 
-int main() {
-    const char *file_to_string = read_file("byte.fn");
-
+frame *load_byte_code(const char *file_to_string, int *number_frames) {
     char **string_split = NULL;
     int number_string = split(file_to_string, '\n', &string_split);
 
     frame *frames = NULL;
 
-    int number_frames = create_frames(string_split, number_string, &frames);
+    *number_frames = create_frames(string_split, number_string, &frames);
 
-    for (int i = 0; i < number_frames; ++i) {
-        printf("%i:\n", i);
-        printf("Name - %s\n", frames[i].name);
-        printf("instruction size - %i\n", frames[i].instructions_size);
-        frame frame = frames[i];
-        for (int j = 0; j < frames[i].instructions_size; ++j) {
-            printf("\t%i: %i - %i, %p\n", frame.instructions[j].number_line, frame.instructions[j].type,
-                    frame.instructions[j].arg, frame.instructions[j].frame_arg);
-        }
-    }
-
-    frame *main = NULL;
-    for (int i = 0; i < number_frames; ++i) {
-        if (!strcmp("main()", frames[i].name)) {
-            main = &frames[i];
-        }
-    }
-    go(main);
-
-    printf("%i", main->stack[frames->pointer_stack]);
-    return 0;
+    return frames;
 }
 
 int create_frames(char **file_split, int number_string, frame **frames) {
@@ -51,7 +29,6 @@ int create_frames(char **file_split, int number_string, frame **frames) {
     for (int j = 0; j < counter; ++j) {
         frames[j]->stack = malloc(sizeof(int) * SIZE_STACK);
 
-        frames[j]->size_local_pool = SIZE_LOCAL_POOL;
         frames[j]->local_pool = malloc(sizeof(int) * SIZE_LOCAL_POOL);
 
         frames[j]->pointer_stack = -1;
@@ -98,8 +75,8 @@ void set_frames_name(char **file_split, int number_string, frame **frames) {
     }
 }
 
-int create_instructions(char **string_split, int number_string, int number_string_name_frame, instruction **instructions,
-                        frame *frames) {
+int create_instructions(char **string_split, int number_string, int number_string_name_frame,
+                        instruction **instructions, frame *frames) {
     int counter_instruction = 0;
     if (number_string == number_string_name_frame) {
         return 0;

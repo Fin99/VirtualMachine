@@ -23,6 +23,6 @@ struct frame {
 
 typedef struct frame frame;
 
-void go(frame*);
+void run(frame *);
 
 #endif //VM_FRAME_H
