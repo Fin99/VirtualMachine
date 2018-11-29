@@ -9,14 +9,21 @@
 
 #include "Instruction.h"
 
-typedef struct {
+struct Frame {
     char *name;
-    int *stack;
-    int *localPool;
-    int pointerStack;
-    Instruction *instructions;
-} Frame;
 
-void go(Frame);
+    int pointerStack;
+    int *stack;
+
+    int locaPoolSize;
+    int *localPool;
+
+    int instructionsSize;
+    Instruction *instructions;
+};
+
+typedef struct Frame Frame;
+
+void go(Frame*);
 
 #endif //VM_FRAME_H

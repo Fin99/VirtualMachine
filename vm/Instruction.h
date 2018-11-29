@@ -11,9 +11,14 @@ struct Frame;
 typedef enum {
     ALOAD,
     ILOAD,
+
     ICONST,
     ISTORE,
+
     INVOKEVIRTUAL,
+
+    IADD,
+
     RETURN,
     IRETURN
 } TypeInstruction;
@@ -21,11 +26,11 @@ typedef enum {
 
 typedef struct {
     TypeInstruction type;
-    long numberLine;
-    long arg;
+    int numberLine;
+    int arg;
     struct Frame *frameArg;
 } Instruction;
 
-void execute(struct Frame);
+void execute(struct Frame*, Instruction*);
 
 #endif //VM_INSTRUCTION_H

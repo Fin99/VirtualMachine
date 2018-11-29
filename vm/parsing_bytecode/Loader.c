@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define SIZE_STACK 128
+#define SIZE_LOCAL_POOL 128
+
+
 int main() {
     const char *fileToString = readFile("byte.fn");
 
@@ -17,10 +21,25 @@ int main() {
     int numberFrames = createFrames(stringSplit, numberString, &frames);
 
     for (int i = 0; i < numberFrames; ++i) {
-        if (!strcmp("main()", frames[i].name)) {
-            go(frames[i]);
+        printf("%i:\n", i);
+        printf("Name - %s\n", frames[i].name);
+        printf("InstructionSize - %i\n", frames[i].instructionsSize);
+        Frame frame = frames[i];
+        for (int j = 0; j < frames[i].instructionsSize; ++j) {
+            printf("\t%i: %i - %i, %p\n", frame.instructions[j].numberLine, frame.instructions[j].type,
+                    frame.instructions[j].arg, frame.instructions[j].frameArg);
         }
     }
+
+    Frame *main = NULL;
+    for (int i = 0; i < numberFrames; ++i) {
+        if (!strcmp("main()", frames[i].name)) {
+            main = &frames[i];
+        }
+    }
+    go(main);
+
+    printf("%i", main->stack[frames->pointerStack]);
     return 0;
 }
 
@@ -29,6 +48,15 @@ int createFrames(char **fileSplit, int numberString, Frame **frames) {
 
     *frames = malloc(sizeof(Frame) * counter);
 
+    for (int j = 0; j < counter; ++j) {
+        frames[j]->stack = malloc(sizeof(int) * SIZE_STACK);
+
+        frames[j]->locaPoolSize = SIZE_LOCAL_POOL;
+        frames[j]->localPool = malloc(sizeof(int) * SIZE_LOCAL_POOL);
+
+        frames[j]->pointerStack = -1;
+    }
+
     setFramesName(fileSplit, numberString, frames);
 
     int counterFrames = 0;
@@ -36,8 +64,10 @@ int createFrames(char **fileSplit, int numberString, Frame **frames) {
         char *string = *(fileSplit + i);
         if (*string != ' ') {
             Instruction *instructions = NULL;
-            i += createInstructions(fileSplit, numberString, i, &instructions, *frames);
+            int numberInstructions = createInstructions(fileSplit, numberString, i, &instructions, *frames);
+            i += numberInstructions;
             (*frames)[counterFrames].instructions = instructions;
+            (*frames)[counterFrames].instructionsSize = numberInstructions;
 
             counterFrames++;
         }
@@ -70,7 +100,7 @@ void setFramesName(char **fileSplit, int numberString, Frame **frames) {
 
 int createInstructions(char **stringSplit, int numberString, int numberStringNameFrame, Instruction **instructions,
                        Frame *frames) {
-    int counter = 0;
+    int counterInstruction = 0;
     if (numberString == numberStringNameFrame) {
         return 0;
     }
@@ -79,11 +109,11 @@ int createInstructions(char **stringSplit, int numberString, int numberStringNam
         if (*string != ' ') {
             break;
         } else {
-            counter++;
+            counterInstruction++;
         }
     }
 
-    *instructions = malloc(sizeof(Instruction) * counter);
+    *instructions = malloc(sizeof(Instruction) * counterInstruction);
     int numberInstructions = 0;
 
     for (int i = numberStringNameFrame + 1; i < numberString; ++i) {
@@ -96,7 +126,7 @@ int createInstructions(char **stringSplit, int numberString, int numberStringNam
             numberInstructions++;
         }
     }
-    return counter;
+    return counterInstruction;
 }
 
 void setNumberLineInstruction(const char *string, Instruction *instruction) {
@@ -104,7 +134,7 @@ void setNumberLineInstruction(const char *string, Instruction *instruction) {
     char **splitString = NULL;
     split(string, ':', &splitString);
 
-    instruction->numberLine = strtol(splitString[0], NULL, 10);
+    instruction->numberLine = (int) strtol(splitString[0], NULL, 10);
 }
 
 void setTypeInstruction(char *string, Instruction *ptr, Frame *frames) {
@@ -120,7 +150,7 @@ void setTypeInstruction(char *string, Instruction *ptr, Frame *frames) {
 
     if (!strcmp(splitString2[0], "aload")) {
         ptr->type = ALOAD;
-        ptr->arg = strtol(splitString2[1], NULL, 10);
+        ptr->arg = (int) strtol(splitString2[1], NULL, 10);
     } else if (!strcmp(splitString2[0], "invokevirtual")) {
         ptr->type = INVOKEVIRTUAL;
         int i = 0;
@@ -133,22 +163,19 @@ void setTypeInstruction(char *string, Instruction *ptr, Frame *frames) {
         }
     } else if (!strcmp(splitString2[0], "istore")) {
         ptr->type = ISTORE;
-        ptr->arg = strtol(splitString2[1], NULL, 10);
+        ptr->arg = (int) strtol(splitString2[1], NULL, 10);
     } else if (!strcmp(splitString2[0], "return")) {
         ptr->type = RETURN;
     } else if (!strcmp(splitString2[0], "iconst")) {
         ptr->type = ICONST;
-        ptr->arg = strtol(splitString2[1], NULL, 10);
+        ptr->arg = (int) strtol(splitString2[1], NULL, 10);
     } else if (!strcmp(splitString2[0], "iload")) {
         ptr->type = ILOAD;
-        ptr->arg = strtol(splitString2[1], NULL, 10);
+        ptr->arg = (int) strtol(splitString2[1], NULL, 10);
     } else if (!strcmp(splitString2[0], "ireturn")) {
         ptr->type = IRETURN;
+    } else if (!strcmp(splitString2[0], "iadd")) {
+        ptr->type = IADD;
     }
-
-    printf("%li ", ptr->numberLine);
-    printf("%d ", ptr->type);
-    printf("%li ", ptr->arg);
-    printf("%p\n", ptr->frameArg);
 }
 

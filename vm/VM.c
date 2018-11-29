@@ -9,23 +9,23 @@
 //}
 //
 ////stack work
-//void constt(int constt) {
+//void constt(int iconst) {
 //    frame.pointerStack++;
-//    frame.stack[frame.pointerStack] = constt;
+//    frame.stack[frame.pointerStack] = iconst;
 //}
 //
-//void store(int indexLocalPool) {
+//void istore(int indexLocalPool) {
 //    frame.localPool[indexLocalPool] = frame.stack[frame.pointerStack];
 //    frame.pointerStack--;
 //}
 //
-//void load(int indexLocalPool) {
+//void iload(int indexLocalPool) {
 //    frame.pointerStack++;
 //    frame.stack[frame.pointerStack] = frame.localPool[indexLocalPool];
 //}
 //
 ////operation
-//void add(){
+//void iadd(){
 //    frame.stack[frame.pointerStack-1] = frame.stack[frame.pointerStack] + frame.stack[frame.pointerStack-1];
 //    frame.pointerStack--;
 //}
