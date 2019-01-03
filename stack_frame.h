@@ -7,12 +7,16 @@
 
 #include "frame.h"
 
-#define MAX_STACK_FRAME_SIZE 128;
+#define MAX_STACK_FRAME_SIZE 128
 
 typedef struct stack_frame stack_frame_t;
 struct stack_frame {
-    frame_t *stack_frame;
+    frame_t **stack_frame;
     int index_first_element_stack_frame;
 };
+
+void init_stack_frame();
+
+stack_frame_t *get_stack_frame();
 
 #endif //VIRTUALMACHINE_STACKFRAME_H

@@ -27,14 +27,16 @@ struct frame {
     instruction_t *instructions;
     int number_instructions;
 
-    int *work_stack;
+    int **work_stack;
     int index_first_element_work_stack;
 
-    int *local_pool;
+    int **local_pool;
     int index_last_element_local_pool;
 };
 
 frame_t *constructor_frame(int index_frame, type_frame_t type_frame, instruction_t *instructions,
                            int number_instructions);
+
+void execute_frame(frame_t *frame);
 
 #endif //VM_FRAME_H

@@ -29,4 +29,6 @@ struct instruction {
     int *args;
 };
 
+void execute_instruction(instruction_t* instruction);
+
 #endif //VM_INSTRUCTION_H
