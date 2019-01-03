@@ -7,7 +7,7 @@
 
 #define VM_FRAME_H
 
-#include "Instruction.h"
+#include "instruction.h"
 
 struct Frame {
     char *name;
