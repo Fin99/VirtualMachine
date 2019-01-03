@@ -13,3 +13,13 @@ void init_stack_frame(){
 stack_frame_t *get_stack_frame(){
     return stack_frame;
 }
+
+frame_t *find_frame(int index_frame){
+    for (int i = 0; i < stack_frame->number_frames; ++i) {
+        if(stack_frame->frames[i]->index_frame == index_frame){
+            return stack_frame->frames[i];
+        }
+    }
+
+    return NULL;
+}

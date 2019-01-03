@@ -18,3 +18,10 @@ frame_t *constructor_frame(int index_frame, type_frame_t type_frame, instruction
 
     return frame;
 }
+
+
+void execute_frame(frame_t *frame){
+    for (int i = 0; i < frame->number_instructions; ++i) {
+        execute_instruction(frame->instructions[i]);
+    }
+}
