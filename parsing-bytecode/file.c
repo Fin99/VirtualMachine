@@ -17,7 +17,9 @@ const char *read_file(const char *file_name) {
 
             file_as_string = malloc(sizeof(char) * (buf_size + 1));
 
-            if (fseek(file, 0L, SEEK_SET) != 0) { /* Handle error here */ }
+            if (fseek(file, 0L, SEEK_SET) != 0) {
+                return NULL;
+            }
 
             size_t new_len = fread(file_as_string, sizeof(char), (size_t) buf_size, file);
             if (new_len == 0) {

@@ -4,9 +4,9 @@
 
 #ifndef VM_STRING_H
 #define VM_STRING_H
+#include <memory.h>
 
-int split(const char *str, char c, char ***arr);
 
-void trim(char *s);
+char** split(const char *str, const char *delimiter, size_t *len);
 
 #endif //VM_STRING_H

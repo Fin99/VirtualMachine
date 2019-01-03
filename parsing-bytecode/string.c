@@ -3,85 +3,32 @@
 //
 
 #include <stdlib.h>
+#include <memory.h>
 #include "string.h"
-#include "string.h"
 
-int split(const char *str, char c, char ***arr) {
-    int count = 1;
-    int token_len = 1;
-    int i = 0;
-    const char *p;
-    char *t;
+char** split(const char *str, const char *delimiter, size_t *len){
+    char *text, *p, *first, **array;
+    int c;
+    char** ret;
 
-    p = str;
-    while (*p != '\0') {
-        if (*p == c)
-            count++;
-        p++;
+    *len = 0;
+    text=strdup(str);//strdup not standard
+    if(text==NULL) return NULL;
+    for(c=0,p=text;NULL!=(p=strtok(p, delimiter));p=NULL, c++)//count item
+        if(c==0) first=p; //first token top
+
+    ret=(char**)malloc(sizeof(char*)*c+1);//+1 for NULL
+    if(ret==NULL){
+        free(text);
+        return NULL;
     }
-
-    *arr = (char **) malloc(sizeof(char *) * count);
-    if (*arr == NULL)
-        exit(1);
-
-    p = str;
-    while (*p != '\0') {
-        if (*p == c) {
-            (*arr)[i] = (char *) malloc(sizeof(char) * token_len - 1);
-            if ((*arr)[i] == NULL)
-                exit(1);
-
-            token_len = 0;
-            i++;
-        }
-        p++;
-        token_len++;
+    //memmove?
+    strcpy(text, str+(first-text));//skip until top token
+    array=ret;
+    for(p=text;NULL!=(p=strtok(p, delimiter));p=NULL){
+        *array++=p;
     }
-    (*arr)[i] = (char *) malloc(sizeof(char) * token_len - 1);
-    if ((*arr)[i] == NULL)
-        exit(1);
-
-    i = 0;
-    p = str;
-    t = ((*arr)[i]);
-    while (*p != '\0') {
-        if (*p != c && *p != '\0') {
-            *t = *p;
-            t++;
-        } else {
-            if (*(t - 1) == '\r') {
-                *(t - 1) = '\0';
-            } else {
-                *t = '\0';
-            }
-            i++;
-            t = ((*arr)[i]);
-        }
-        p++;
-    }
-
-    return count;
-}
-
-void trim(char *s) {
-    // удаляем пробелы и табы с начала строки:
-    int i = 0, j;
-    while ((s[i] == ' ') || (s[i] == '\t')) {
-        i++;
-    }
-    if (i > 0) {
-        for (j = 0; j < strlen(s); j++) {
-            s[j] = s[j + i];
-        }
-        s[j] = '\0';
-    }
-
-    // удаляем пробелы и табы с конца строки:
-    i = (int) (strlen(s) - 1);
-    while ((s[i] == ' ') || (s[i] == '\t')) {
-        i--;
-    }
-    if (i < (strlen(s) - 1)) {
-        s[i + 1] = '\0';
-    }
+    *array=NULL;
+    *len=c;
+    return ret;
 }
