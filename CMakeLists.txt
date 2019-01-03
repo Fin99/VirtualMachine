@@ -11,7 +11,12 @@ set(Kernel instruction.h instruction.c
         stack_frame.h stack_frame.c
         frame.h frame.c)
 
-set(Test test/test.h
+set(TestParser test/test.h
         test/test_parsing.h test/test_parsing.c)
+set(TestKernel test/test.h
+        test/test_kernel.c test/test_kernel.h)
 
-add_executable(VirtualMachine ${Parser} ${Kernel} ${Test})
+
+add_executable(TestParser ${TestParser} ${Parser})
+
+add_executable(TestKernel ${TestKernel} ${Kernel})
