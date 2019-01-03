@@ -26,6 +26,8 @@ const char *read_file(const char *file_name) {
             }
         }
         fclose(fp);
+    } else {
+        return NULL
     }
     return source;
 }

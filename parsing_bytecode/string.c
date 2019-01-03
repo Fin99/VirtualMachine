@@ -3,7 +3,7 @@
 //
 
 #include <stdlib.h>
-#include <string.h>
+#include "string.h"
 #include "string.h"
 
 int split(const char *str, char c, char ***arr) {

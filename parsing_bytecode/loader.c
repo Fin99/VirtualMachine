@@ -4,7 +4,7 @@
 #include "loader.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include "string.h"
 
 #define SIZE_STACK 128
 #define SIZE_LOCAL_POOL 128

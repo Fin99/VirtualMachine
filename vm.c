@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <memory.h>
 #include "vm.h"
-#include "parsing_bytecode/file.h"
-#include "parsing_bytecode/loader.h"
+#include "vm/parsing_bytecode/file.h"
+#include "vm/parsing_bytecode/loader.h"
 
 #define FILE_NAME "byte.fn"
 //
