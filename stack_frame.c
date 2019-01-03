@@ -8,6 +8,9 @@ void init_stack_frame(){
 
     stack_frame->stack_frame = malloc(sizeof(frame_t) * MAX_STACK_FRAME_SIZE);
     stack_frame->index_first_element_stack_frame = -1;
+
+    stack_frame->frames = malloc(sizeof(frame_t) * MAX_NUMBER_FRAMES);
+    stack_frame->number_frames = 0;
 }
 
 stack_frame_t *get_stack_frame(){

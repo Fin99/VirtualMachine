@@ -31,4 +31,6 @@ struct instruction {
 
 void execute_instruction(instruction_t instruction);
 
+instruction_t* constructor_instruction(int index, type_instruction_t type, int *args);
+
 #endif //VM_INSTRUCTION_H

@@ -27,10 +27,10 @@ struct frame {
     instruction_t *instructions;
     int number_instructions;
 
-    int **work_stack;
+    int *work_stack;
     int index_first_element_work_stack;
 
-    int **local_pool;
+    int *local_pool;
     int index_last_element_local_pool;
 };
 
