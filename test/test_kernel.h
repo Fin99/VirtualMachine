@@ -1,0 +1,8 @@
+//
+// Created by fin on 03.01.19.
+//
+
+#ifndef VIRTUALMACHINE_TEST_KERNEL_H
+#define VIRTUALMACHINE_TEST_KERNEL_H
+
+#endif //VIRTUALMACHINE_TEST_KERNEL_H
