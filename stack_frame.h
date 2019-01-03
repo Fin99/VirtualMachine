@@ -12,7 +12,7 @@
 typedef struct stack_frame stack_frame_t;
 struct stack_frame {
     frame_t *stack_frame;
-    int index_last_element_stack_frame;
+    int index_first_element_stack_frame;
 };
 
 #endif //VIRTUALMACHINE_STACKFRAME_H
