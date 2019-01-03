@@ -6,31 +6,27 @@
 
 #define VM_INSTRUCTION_H
 
-struct frame;
+typedef enum type_instruction type_instruction_t;
+enum type_instruction {
+    ADD,
 
-typedef enum {
-    ALOAD,
-    ILOAD,
+    LOAD,
+    CONST,
+    STORE,
 
-    ICONST,
-    ISTORE,
-
-    INVOKEVIRTUAL,
-
-    IADD,
+    INVOKE,
 
     RETURN,
     IRETURN
-} type_instruction;
+};
 
+typedef struct instruction instruction_t;
+struct instruction {
+    int index_instruction;
 
-typedef struct {
-    type_instruction type;
-    int number_line;
-    int arg;
-    struct frame *frame_arg;
-} instruction;
+    type_instruction_t type_instruction;
 
-void execute(struct frame*, instruction*);
+    int *args;
+};
 
 #endif //VM_INSTRUCTION_H
