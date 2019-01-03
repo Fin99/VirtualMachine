@@ -1,5 +1,5 @@
-#include "Instruction.h"
-#include "frame.h"
+//#include "Instruction.h"
+/*#include "frame.h"
 
 
 void iconst(Frame *frame, int arg) {
@@ -56,4 +56,4 @@ void execute(Frame *frame, Instruction *instruction) {
 //        case IRETURN:
 //            break;
     }
-}
+}*/

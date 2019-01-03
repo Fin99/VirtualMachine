@@ -19,7 +19,7 @@ struct Frame {
     int *localPool;
 
     int instructionsSize;
-    Instruction *instructions;
+    instruction *instructions;
 };
 
 typedef struct Frame Frame;

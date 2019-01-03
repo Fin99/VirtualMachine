@@ -10,7 +10,7 @@
 #define SIZE_LOCAL_POOL 128
 
 
-frame *load_byte_code(const char *file_to_string, int *number_frames) {
+/*frame *load_byte_code(const char *file_to_string, int *number_frames) {
     char **string_split = NULL;
     int number_string = split(file_to_string, '\n', &string_split);
 
@@ -155,4 +155,4 @@ void set_type_instruction(char *string, instruction *ptr, frame *frames) {
         ptr->type = IADD;
     }
 }
-
+*/

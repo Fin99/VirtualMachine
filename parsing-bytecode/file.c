@@ -7,27 +7,30 @@
 #include "file.h"
 
 const char *read_file(const char *file_name) {
-    char *source = NULL;
-    FILE *fp = fopen(file_name, "r");
-    if (fp != NULL) {
-        if (fseek(fp, 0L, SEEK_END) == 0) {
-            long buf_size = ftell(fp);
-            if (buf_size == -1) { /* Error */ }
+    char *file_as_string = NULL;
+    FILE *file = fopen(file_name, "r");
 
-            source = malloc(sizeof(char) * (buf_size + 1));
+    if (file != NULL) {
+        if (fseek(file, 0L, SEEK_END) == 0) {
+            long buf_size = ftell(file);
+            if (buf_size == -1) { return NULL; }
 
-            if (fseek(fp, 0L, SEEK_SET) != 0) { /* Handle error here */ }
+            file_as_string = malloc(sizeof(char) * (buf_size + 1));
 
-            size_t new_len = fread(source, sizeof(char), (size_t) buf_size, fp);
+            if (fseek(file, 0L, SEEK_SET) != 0) { /* Handle error here */ }
+
+            size_t new_len = fread(file_as_string, sizeof(char), (size_t) buf_size, file);
             if (new_len == 0) {
                 fputs("Error reading file", stderr);
             } else {
-                source[new_len] = '\0';
+                file_as_string[new_len] = '\0';
             }
+        } else {
+            return NULL;
         }
-        fclose(fp);
+        fclose(file);
     } else {
         return NULL;
     }
-    return source;
+    return file_as_string;
 }
