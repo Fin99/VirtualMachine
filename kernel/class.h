@@ -7,10 +7,10 @@
 
 typedef struct class class_t;
 struct class{
-    int index_class;
+    long long index_class;
     char* name;
 
-    int number_fields;
+    long long number_fields;
 };
 
 typedef struct object object_t;

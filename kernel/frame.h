@@ -20,22 +20,22 @@ enum type_frame {
 
 typedef struct frame frame_t;
 struct frame {
-    int index_frame;
+    long long index_frame;
     char* name;
 
     type_frame_t type_frame;
 
     instruction_t **instructions;
-    int number_instructions;
+    long long number_instructions;
 
-    int *work_stack;
-    int index_first_element_work_stack;
+    long long *work_stack;
+    long long index_first_element_work_stack;
 
-    int *local_pool;
+    long long *local_pool;
 };
 
-frame_t *constructor_frame(int index_frame, type_frame_t type_frame, instruction_t **instructions,
-                           int number_instructions);
+frame_t *constructor_frame(long long index_frame, type_frame_t type_frame, instruction_t **instructions,
+                           long long number_instructions);
 
 void destructor_frame(frame_t *frame);
 

@@ -14,13 +14,13 @@
 typedef struct stack_frame stack_frame_t;
 struct stack_frame {
     frame_t **stack_frame;
-    int index_first_element_stack_frame;
+    long long index_first_element_stack_frame;
 
     frame_t **frames;
-    int number_frames;
+    long long number_frames;
 
     class_t **classes;
-    int number_classes;
+    long long number_classes;
 };
 
 void init_stack_frame();
@@ -29,8 +29,8 @@ void destructor_stack_frame();
 
 stack_frame_t *get_stack_frame();
 
-frame_t *find_frame(int index_frame);
+frame_t *find_frame(long long index_frame);
 
-class_t *find_class(int index_class);
+class_t *find_class(long long index_class);
 
 #endif //VIRTUALMACHINE_STACKFRAME_H
