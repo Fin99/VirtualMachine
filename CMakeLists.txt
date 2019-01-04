@@ -7,9 +7,9 @@ set(Parser parsing-bytecode/loader.h parsing-bytecode/loader.c
         parsing-bytecode/string.c parsing-bytecode/string.h
         parsing-bytecode/file.c parsing-bytecode/file.h)
 
-set(Kernel instruction.h instruction.c
-        stack_frame.h stack_frame.c
-        frame.h frame.c)
+set(Kernel kernel/instruction.h kernel/instruction.c
+        kernel/stack_frame.h kernel/stack_frame.c
+        kernel/frame.h kernel/frame.c)
 
 set(TestParser test/test.h
         test/test_parsing.h test/test_parsing.c)

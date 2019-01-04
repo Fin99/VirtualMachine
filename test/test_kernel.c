@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include "test_kernel.h"
 #include "test.h"
-#include "../frame.h"
-#include "../stack_frame.h"
+#include "../kernel/frame.h"
+#include "../kernel/stack_frame.h"
 
 frame_t *create_test_frame_div_i() {
     int *args1 = malloc(sizeof(int));

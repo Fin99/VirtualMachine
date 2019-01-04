@@ -5,7 +5,7 @@
 //#ifndef VM_LOADER_H
 #define VM_LOADER_H
 
-#include "../frame.h"
+#include "../kernel/frame.h"
 #include "string.h"
 #include "file.h"
 
