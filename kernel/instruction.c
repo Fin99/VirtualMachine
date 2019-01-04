@@ -16,7 +16,7 @@ instruction_t *constructor_instruction(int index, type_instruction_t type, int *
     return instruction;
 }
 
-void destructor_instruction(instruction_t *instruction){
+void destructor_instruction(instruction_t *instruction) {
     free(instruction->args);
     free(instruction);
 }
@@ -35,6 +35,9 @@ void print_name_instruction(instruction_t instruction) {
         case COMPARE:
             printf("compare");
             break;
+        case NEW:
+            printf("new %s", find_class(instruction.args[0])->name);
+            break;
         case LOAD:
             printf("load %i", instruction.args[0]);
             break;
@@ -45,7 +48,7 @@ void print_name_instruction(instruction_t instruction) {
             printf("store %i", instruction.args[0]);
             break;
         case INVOKE:
-            printf("invoke %i", instruction.args[0]);
+            printf("invoke %s", find_frame(instruction.args[0])->name);
             break;
         case RETURN:
             printf("return");
@@ -132,6 +135,9 @@ void execute_instruction(instruction_t instruction) {
             break;
         case COMPARE:
             compare(work_stack, frame);
+            break;
+        case NEW:
+
             break;
         case LOAD:
             (*work_stack)[++frame->index_first_element_work_stack] = (*local_pool)[*instruction.args];

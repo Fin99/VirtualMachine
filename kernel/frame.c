@@ -21,6 +21,8 @@ frame_t *constructor_frame(int index_frame, type_frame_t type_frame, instruction
 void destructor_frame(frame_t *frame){
     free(frame->work_stack);
     free(frame->local_pool);
+    free(frame->name);
+
     for (int i = 0; i < frame->number_instructions; ++i) {
         destructor_instruction(frame->instructions[i]);
     }

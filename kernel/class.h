@@ -13,4 +13,6 @@ struct class{
     int* fields;
     int number_fields;
 };
+
+void destructor_class(class_t *class);
 #endif //VIRTUALMACHINE_CLASS_H

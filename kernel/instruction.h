@@ -14,6 +14,8 @@ enum type_instruction {
 
     COMPARE,
 
+    NEW,
+
     LOAD,
     CONST,
     STORE,
