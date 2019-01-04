@@ -18,7 +18,7 @@ frame_t *constructor_frame(long long index_frame, type_frame_t type_frame, instr
     return frame;
 }
 
-void destructor_frame(frame_t *frame){
+void destructor_frame(frame_t *frame) {
     free(frame->work_stack);
     free(frame->local_pool);
     free(frame->name);
@@ -30,7 +30,7 @@ void destructor_frame(frame_t *frame){
     free(frame);
 }
 
-void execute_frame(frame_t *frame){
+void execute_frame(frame_t *frame) {
     for (long long i = 0; i < frame->number_instructions; ++i) {
         execute_instruction(*frame->instructions[i]);
     }

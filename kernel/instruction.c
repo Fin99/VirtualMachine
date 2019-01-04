@@ -42,6 +42,9 @@ void print_name_instruction(instruction_t instruction) {
         case GET_FIELD:
             printf("get_field %lli", instruction.args[0]);
             break;
+        case SET_FIELD:
+            printf("set_field %lli", instruction.args[0]);
+            break;
         case LOAD:
             printf("load %lli", instruction.args[0]);
             break;
@@ -110,6 +113,13 @@ void get_field(long long **work_stack, frame_t *frame, long long number_field) {
     (*work_stack)[frame->index_first_element_work_stack] = object->fields[number_field];
 }
 
+void set_field(long long **work_stack, frame_t *frame, long long number_field) {
+    object_t *object = (object_t *) (*work_stack)[frame->index_first_element_work_stack];
+    long long value = (*work_stack)[frame->index_first_element_work_stack - 1];
+    object->fields[number_field] = value;
+    frame->index_first_element_work_stack -= 2;
+}
+
 void print_work_stack(frame_t *frame) {
     printf("Work stack(size = %lli): ", frame->index_first_element_work_stack + 1);
     for (long long i = frame->index_first_element_work_stack; i >= 0; --i) {
@@ -150,6 +160,9 @@ void execute_instruction(instruction_t instruction) {
             break;
         case GET_FIELD:
             get_field(work_stack, frame, *instruction.args);
+            break;
+        case SET_FIELD:
+            set_field(work_stack, frame, *instruction.args);
             break;
         case LOAD:
             (*work_stack)[++frame->index_first_element_work_stack] = (*local_pool)[*instruction.args];

@@ -8,10 +8,11 @@
 #include "class.h"
 
 typedef struct gc gc_t;
-struct gc{
+struct gc {
     object_t **objects;
     long long number_objects;
 };
 
 long long new_object(class_t *class);
+
 #endif //VIRTUALMACHINE_GC_H

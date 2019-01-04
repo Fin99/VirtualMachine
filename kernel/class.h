@@ -6,21 +6,22 @@
 #define VIRTUALMACHINE_CLASS_H
 
 typedef struct class class_t;
-struct class{
+struct class {
     long long index_class;
-    char* name;
+    char *name;
 
     long long number_fields;
 };
 
 typedef struct object object_t;
-struct object{
+struct object {
     class_t *class;
 
-    int* fields;
+    long long *fields;
 };
 
 void destructor_class(class_t *class);
 
 void destructor_object(object_t *object);
+
 #endif //VIRTUALMACHINE_CLASS_H

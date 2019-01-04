@@ -16,6 +16,7 @@ enum type_instruction {
 
     NEW,
     GET_FIELD,
+    SET_FIELD,
 
     LOAD,
     CONST,

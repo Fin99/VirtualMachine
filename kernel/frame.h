@@ -21,7 +21,7 @@ enum type_frame {
 typedef struct frame frame_t;
 struct frame {
     long long index_frame;
-    char* name;
+    char *name;
 
     type_frame_t type_frame;
 
