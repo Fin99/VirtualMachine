@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "stack_frame.h"
 
-static stack_frame_t *stack_frame = NULL;
+stack_frame_t *stack_frame = NULL;
 
 void destructor_stack_frame() {
     free(stack_frame->stack_frame);

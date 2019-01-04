@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "frame.h"
 #include "stack_frame.h"
+#include "gc.h"
 
 #define DEBUG 1
 #define DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT 5
@@ -137,7 +138,7 @@ void execute_instruction(instruction_t instruction) {
             compare(work_stack, frame);
             break;
         case NEW:
-
+            (*work_stack)[++frame->index_first_element_work_stack] = new_object(find_class(*instruction.args));
             break;
         case LOAD:
             (*work_stack)[++frame->index_first_element_work_stack] = (*local_pool)[*instruction.args];

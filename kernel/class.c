@@ -7,5 +7,9 @@
 
 void destructor_class(class_t *class){
     free(class->name);
-    free(class->fields);
+}
+
+void destructor_object(object_t *object){
+    free(object->fields);
+    free(object);
 }

@@ -9,9 +9,9 @@
 
 typedef struct gc gc_t;
 struct gc{
-    class_t **objects;
+    object_t **objects;
     int number_objects;
 };
 
-int new(class_t *class);
+int new_object(class_t *class);
 #endif //VIRTUALMACHINE_GC_H
