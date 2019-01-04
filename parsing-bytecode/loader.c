@@ -150,7 +150,7 @@ void set_type_instruction(char *string, instruction *ptr, frame *frames) {
         ptr->type = ILOAD;
         ptr->arg = (int) strtol(split_string2[1], NULL, 10);
     } else if (!strcmp(split_string2[0], "ireturn")) {
-        ptr->type = IRETURN;
+        ptr->type = I_RETURN;
     } else if (!strcmp(split_string2[0], "iadd")) {
         ptr->type = IADD;
     }

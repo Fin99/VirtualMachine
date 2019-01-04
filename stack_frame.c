@@ -1,9 +1,21 @@
 #include <stdlib.h>
 #include "stack_frame.h"
 
-static stack_frame_t *stack_frame;
+static stack_frame_t *stack_frame = NULL;
 
-void init_stack_frame(){
+void destructor_stack_frame() {
+    free(stack_frame->stack_frame);
+    for (int i = 0; i < stack_frame->number_frames; ++i) {
+        destructor_frame(stack_frame->frames[i]);
+    }
+    free(stack_frame->frames);
+    free(stack_frame);
+}
+
+void init_stack_frame() {
+    if (stack_frame != NULL) {
+        destructor_stack_frame(stack_frame);
+    }
     stack_frame = malloc(sizeof(stack_frame_t));
 
     stack_frame->stack_frame = malloc(sizeof(frame_t) * MAX_STACK_FRAME_SIZE);
@@ -13,13 +25,14 @@ void init_stack_frame(){
     stack_frame->number_frames = 0;
 }
 
-stack_frame_t *get_stack_frame(){
+
+stack_frame_t *get_stack_frame() {
     return stack_frame;
 }
 
-frame_t *find_frame(int index_frame){
+frame_t *find_frame(int index_frame) {
     for (int i = 0; i < stack_frame->number_frames; ++i) {
-        if(stack_frame->frames[i]->index_frame == index_frame){
+        if (stack_frame->frames[i]->index_frame == index_frame) {
             return stack_frame->frames[i];
         }
     }

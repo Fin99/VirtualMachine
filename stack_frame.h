@@ -21,6 +21,8 @@ struct stack_frame {
 
 void init_stack_frame();
 
+void destructor_stack_frame();
+
 stack_frame_t *get_stack_frame();
 
 frame_t *find_frame(int index_frame);

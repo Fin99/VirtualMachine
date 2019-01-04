@@ -9,7 +9,8 @@
 typedef enum type_instruction type_instruction_t;
 enum type_instruction {
     ADD,
-    DIV,
+    DIV_I,
+    MUL,
 
     COMPARE,
 
@@ -20,7 +21,7 @@ enum type_instruction {
     INVOKE,
 
     RETURN,
-    IRETURN
+    I_RETURN
 };
 
 typedef struct instruction instruction_t;
