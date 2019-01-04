@@ -10,6 +10,7 @@
 
 #define MAX_STACK_FRAME_SIZE 128
 #define MAX_NUMBER_FRAMES 128
+#define MAX_NUMBER_CLASSES 128
 
 typedef struct stack_frame stack_frame_t;
 struct stack_frame {
