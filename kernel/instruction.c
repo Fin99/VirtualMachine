@@ -185,7 +185,7 @@ void execute_instruction(instruction_t instruction) {
     }
 
     if (DEBUG) {
-        printf("Index frame: %lli. Instruction: ", frame->index_frame);
+        printf("Frame: %s. Instruction: ", frame->name);
         print_name_instruction(instruction);
         printf("\n");
         print_work_stack(frame);
