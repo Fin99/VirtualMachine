@@ -22,7 +22,7 @@ void destructor_frame(frame_t *frame){
     free(frame->work_stack);
     free(frame->local_pool);
     for (int i = 0; i < frame->number_instructions; ++i) {
-        free(frame->instructions[i]);
+        destructor_instruction(frame->instructions[i]);
     }
     free(frame->instructions);
     free(frame);
