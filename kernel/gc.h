@@ -15,4 +15,6 @@ struct gc {
 
 long long new_object(class_t *class);
 
+void init_gc();
+
 #endif //VIRTUALMACHINE_GC_H

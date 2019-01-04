@@ -11,7 +11,7 @@ void destructor_gc() {
     free(gc);
 }
 
-void init_stack_frame() {
+void init_gc() {
     if (gc != NULL) {
         destructor_gc();
     }
