@@ -9,6 +9,9 @@
 typedef enum type_instruction type_instruction_t;
 enum type_instruction {
     ADD,
+    DIV,
+
+    COMPARE,
 
     LOAD,
     CONST,
