@@ -29,13 +29,6 @@ void start_gc() {
 
 }
 
-object_t *create_object(class_t *class) {
-    object_t *object = malloc(sizeof(object_t));
-    object->fields = malloc(sizeof(long long) * class->number_fields);
-    object->class = class;
-    return object;
-}
-
 bool check_gc(class_t *class) {
     long long size_object = sizeof(object_t) + sizeof(long long) * class->number_fields;
 
@@ -59,7 +52,7 @@ long long new_object(class_t *class) {
         gc->objects = realloc(gc->objects, sizeof(object_t *));
         gc->heap_size += sizeof(object_t) + sizeof(long long) * class->number_fields;
 
-        object_t *object = create_object(class);
+        object_t *object = constructor_object(class);
 
         gc->objects[gc->number_objects] = object;
         return (long long) object;
