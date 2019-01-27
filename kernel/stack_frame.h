@@ -14,8 +14,8 @@
 
 
 #define DEBUG 0
-#define DEBUG_HEAP 1
-#define DEBUG_INSTRUCTION 0
+#define DEBUG_HEAP 0
+#define DEBUG_INSTRUCTION 1
 #define DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT 2
 
 typedef struct stack_frame stack_frame_t;
