@@ -47,7 +47,7 @@ bool check_gc(class_t *class) {
         return false;
     }
 
-    if(DEBUG){
+    if(DEBUG || DEBUG_HEAP){
         printf("Max heap size: %i. Heap size: %lli. Load: %lli%%\n", MAX_HEAP_SIZE, gc->heap_size, (gc->heap_size+size_object)*100/MAX_HEAP_SIZE);
     }
 

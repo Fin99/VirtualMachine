@@ -182,7 +182,7 @@ void execute_instruction(instruction_t instruction) {
             break;
     }
 
-    if (DEBUG) {
+    if (DEBUG || DEBUG_INSTRUCTION) {
         printf("Frame: %s. Instruction: ", frame->name);
         print_name_instruction(instruction);
         printf("\n");
