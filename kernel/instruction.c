@@ -4,8 +4,6 @@
 #include "stack_frame.h"
 #include "gc.h"
 
-#define DEBUG 1
-#define DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT 5
 
 instruction_t *constructor_instruction(long long index, type_instruction_t type, long long *args) {
     instruction_t *instruction = malloc(sizeof(instruction_t));

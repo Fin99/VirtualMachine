@@ -12,6 +12,10 @@
 #define MAX_NUMBER_FRAMES 128
 #define MAX_NUMBER_CLASSES 128
 
+
+#define DEBUG 1
+#define DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT 2
+
 typedef struct stack_frame stack_frame_t;
 struct stack_frame {
     frame_t **stack_frame;

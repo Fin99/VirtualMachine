@@ -449,50 +449,64 @@ int main() {
     printf("test_kernel_div_i(): \n");
     if (test_kernel_div_i() == TEST_SUCCESS) {
         puts("Test passed successfully\n");
+        fflush(stdout);
     } else {
-        puts("Test failed\n");
+        fputs("Test failed\n", stderr);
+        fflush(stderr);
     }
 
     printf("test_kernel_add(): \n");
     if (test_kernel_add() == TEST_SUCCESS) {
         puts("Test passed successfully\n");
+        fflush(stdout);
     } else {
-        puts("Test failed\n");
+        fputs("Test failed\n", stderr);
+        fflush(stderr);
     }
 
     printf("test_kernel_mul(): \n");
     if (test_kernel_mul() == TEST_SUCCESS) {
         puts("Test passed successfully\n");
+        fflush(stdout);
     } else {
-        puts("Test failed\n");
+        fputs("Test failed\n", stderr);
+        fflush(stderr);
     }
 
     printf("test_kernel_compare_1(): \n");
     if (test_kernel_compare_1() == TEST_SUCCESS) {
         puts("Test passed successfully\n");
+        fflush(stdout);
     } else {
-        puts("Test failed\n");
+        fputs("Test failed\n", stderr);
+        fflush(stderr);
     }
 
     printf("test_kernel_compare_2(): \n");
     if (test_kernel_compare_2() == TEST_SUCCESS) {
         puts("Test passed successfully\n");
+        fflush(stdout);
     } else {
-        puts("Test failed\n");
+        fputs("Test failed\n", stderr);
+        fflush(stderr);
     }
 
     printf("test_kernel_invoke(): \n");
     if (test_kernel_invoke() == TEST_SUCCESS) {
         puts("Test passed successfully\n");
+        fflush(stdout);
     } else {
-        puts("Test failed\n");
+        fputs("Test failed\n", stderr);
+        fflush(stderr);
     }
 
     printf("test_kernel_class(): \n");
     if (test_kernel_class() == TEST_SUCCESS) {
         puts("Test passed successfully\n");
+        fflush(stdout);
     } else {
-        puts("Test failed\n");
+        fputs("Test failed\n", stderr);
+        fflush(stderr);
     }
 
     return 0;
