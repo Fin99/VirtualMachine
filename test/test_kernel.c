@@ -350,9 +350,9 @@ frame_t *create_test_frame_class() {
     index_class_2_local_pool_2[0] = 1;
 
     long long *number_field_class_2 = malloc(sizeof(long long));
-    number_field_class_1[0] = 0;
+    number_field_class_2[0] = 0;
     long long *number_field_class_2_1 = malloc(sizeof(long long));
-    number_field_class_1_1[0] = 0;
+    number_field_class_2_1[0] = 0;
 
     long long *const_value_1 = malloc(sizeof(long long));
     const_value_1[0] = 9;
@@ -446,67 +446,35 @@ test_result_t test_kernel_class() {
 
 
 int main() {
-    printf("test_kernel_div_i(): \n");
-    if (test_kernel_div_i() == TEST_SUCCESS) {
-        puts("Test passed successfully\n");
-        fflush(stdout);
-    } else {
-        fputs("Test failed\n", stderr);
-        fflush(stderr);
-    }
+    int number_test_functions = 7;
+    test_result_t(*test_functions[number_test_functions])();
+    test_functions[0] = test_kernel_div_i;
+    test_functions[1] = test_kernel_add;
+    test_functions[2] = test_kernel_mul;
+    test_functions[3] = test_kernel_compare_1;
+    test_functions[4] = test_kernel_compare_2;
+    test_functions[5] = test_kernel_invoke;
+    test_functions[6] = test_kernel_class;
+//    test_functions[7] = test_kernel_div_i;
 
-    printf("test_kernel_add(): \n");
-    if (test_kernel_add() == TEST_SUCCESS) {
-        puts("Test passed successfully\n");
-        fflush(stdout);
-    } else {
-        fputs("Test failed\n", stderr);
-        fflush(stderr);
-    }
+    char *name_test_functions[number_test_functions];
+    name_test_functions[0] = "test_kernel_div_i():";
+    name_test_functions[1] = "test_kernel_add():";
+    name_test_functions[2] = "test_kernel_mul():";
+    name_test_functions[3] = "test_kernel_compare_1():";
+    name_test_functions[4] = "test_kernel_compare_2():";
+    name_test_functions[5] = "test_kernel_invoke():";
+    name_test_functions[6] = "test_kernel_class():";
 
-    printf("test_kernel_mul(): \n");
-    if (test_kernel_mul() == TEST_SUCCESS) {
-        puts("Test passed successfully\n");
-        fflush(stdout);
-    } else {
-        fputs("Test failed\n", stderr);
-        fflush(stderr);
-    }
-
-    printf("test_kernel_compare_1(): \n");
-    if (test_kernel_compare_1() == TEST_SUCCESS) {
-        puts("Test passed successfully\n");
-        fflush(stdout);
-    } else {
-        fputs("Test failed\n", stderr);
-        fflush(stderr);
-    }
-
-    printf("test_kernel_compare_2(): \n");
-    if (test_kernel_compare_2() == TEST_SUCCESS) {
-        puts("Test passed successfully\n");
-        fflush(stdout);
-    } else {
-        fputs("Test failed\n", stderr);
-        fflush(stderr);
-    }
-
-    printf("test_kernel_invoke(): \n");
-    if (test_kernel_invoke() == TEST_SUCCESS) {
-        puts("Test passed successfully\n");
-        fflush(stdout);
-    } else {
-        fputs("Test failed\n", stderr);
-        fflush(stderr);
-    }
-
-    printf("test_kernel_class(): \n");
-    if (test_kernel_class() == TEST_SUCCESS) {
-        puts("Test passed successfully\n");
-        fflush(stdout);
-    } else {
-        fputs("Test failed\n", stderr);
-        fflush(stderr);
+    for (int i = 0; i < number_test_functions; ++i) {
+        puts(name_test_functions[i]);
+        if (test_functions[i]() == TEST_SUCCESS) {
+            puts("Test passed successfully\n");
+            fflush(stdout);
+        } else {
+            fputs("Test failed\n", stderr);
+            fflush(stderr);
+        }
     }
 
     return 0;
