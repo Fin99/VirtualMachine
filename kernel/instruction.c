@@ -55,6 +55,9 @@ void print_name_instruction(instruction_t instruction) {
         case POP:
             printf("pop");
             break;
+        case CLEAR_LOCAL_VARIABLE:
+            printf("clear_local_variable %lli", instruction.args[0]);
+            break;
         case INVOKE:
             printf("invoke %s", find_frame(instruction.args[0])->name);
             break;
@@ -63,6 +66,9 @@ void print_name_instruction(instruction_t instruction) {
             break;
         case I_RETURN:
             printf("i_return");
+            break;
+        case O_RETURN:
+            printf("o_return");
             break;
     }
 }
@@ -210,6 +216,10 @@ void execute_instruction(instruction_t instruction) {
             break;
         case POP:
             frame->index_first_element_work_stack--;
+            break;
+        case CLEAR_LOCAL_VARIABLE:
+            (*local_pool)[*instruction.args] = 0;
+            (*is_local_pool_element_object)[*instruction.args] = false;
             break;
         case INVOKE:
             invoke(stack_frame, instruction);

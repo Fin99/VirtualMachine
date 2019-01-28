@@ -22,6 +22,7 @@ enum type_instruction {
     CONST,
     STORE,
     POP,
+    CLEAR_LOCAL_VARIABLE,
 
     INVOKE,
 
