@@ -148,11 +148,11 @@ void oreturn(stack_frame_t *stack_frame, long long **work_stack) {
 void print_work_stack(frame_t *frame) {
     printf("Work stack(size = %lli): ", frame->index_first_element_work_stack + 1);
     for (long long i = frame->index_first_element_work_stack; i >= 0; --i) {
-        printf("~%lli", frame->work_stack[i]);
         if (frame->is_work_stack_element_object[i]) {
-            printf("(object)");
+            printf("~%p(object)~", (void *) frame->work_stack[i]);
+        } else {
+            printf("~%lli~", frame->work_stack[i]);
         }
-        printf("~");
     }
     printf("\n");
 }
@@ -160,13 +160,19 @@ void print_work_stack(frame_t *frame) {
 void print_local_pool(frame_t *frame) {
     printf("Local pool(first %i elements): ", DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT);
     for (long long i = 0; i < DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT; ++i) {
-        printf("|%lli", frame->local_pool[i]);
         if (frame->is_local_pool_element_object[i]) {
-            printf("(object)");
+            printf("|%p(object)|", (void *) frame->local_pool[i]);
+        } else {
+            printf("|%lli|", frame->local_pool[i]);
         }
-        printf("|");
     }
     printf("\n");
+}
+
+void new(frame_t *frame, instruction_t instruction, long long **work_stack, bool **is_work_stack_element_object) {
+    long long object = new_object(find_class(*instruction.args));
+    (*work_stack)[++frame->index_first_element_work_stack] = object;
+    (*is_work_stack_element_object)[frame->index_first_element_work_stack] = true;
 }
 
 void execute_instruction(instruction_t instruction) {
@@ -191,8 +197,7 @@ void execute_instruction(instruction_t instruction) {
             compare(frame, work_stack, is_work_stack_element_object);
             break;
         case NEW:
-            (*work_stack)[++frame->index_first_element_work_stack] = new_object(find_class(*instruction.args));
-            (*is_work_stack_element_object)[frame->index_first_element_work_stack] = true;
+            new(frame, instruction, work_stack, is_work_stack_element_object);
             break;
         case GET_FIELD:
             get_field(work_stack, frame, *instruction.args, is_work_stack_element_object);
@@ -225,6 +230,8 @@ void execute_instruction(instruction_t instruction) {
             invoke(stack_frame, instruction);
             break;
         case RETURN:
+//            if (get_gc() != NULL && get_gc()->number_objects > 0)
+//                start_gc();
             stack_frame->index_first_element_stack_frame--;
             break;
         case I_RETURN:
@@ -241,5 +248,6 @@ void execute_instruction(instruction_t instruction) {
         printf("\n");
         print_work_stack(frame);
         print_local_pool(frame);
+        printf("\n");
     }
 }

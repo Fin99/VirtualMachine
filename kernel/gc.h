@@ -20,6 +20,8 @@ gc_t *get_gc();
 
 void destructor_gc();
 
+void start_gc();
+
 long long new_object(class_t *class);
 
 void init_gc();

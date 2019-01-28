@@ -45,7 +45,7 @@ void mark_root(bool *mark) {
 
     for (int i = 0; i < number_frames; ++i) {
         frame_t *frame = frames[i];
-        for (int j = 0; j < frame->index_first_element_work_stack; ++j) {
+        for (int j = 0; j <= frame->index_first_element_work_stack; ++j) {
             if (frame->is_work_stack_element_object[j]) {
                 int index = get_index_object((object_t *)frame->work_stack[j]);
                 mark[index] = true;
@@ -88,34 +88,8 @@ void mark_tree(bool *mark) {
     free(copy_mark);
 }
 
-void sweep(const bool *mark) {
-    for (int i = 0; i < gc->number_objects; ++i) {
-        if (!mark[i]) {
-            gc->heap_size -= sizeof(object_t) + sizeof(long long) * gc->objects[i]->class->number_fields;
-
-            destructor_object(gc->objects[i]);
-            gc->objects[i] = NULL;
-        }
-    }
-}
-
-void compact() {
-    for (int i = 0; i < gc->number_objects; ++i) {
-        if (gc->objects[i] == NULL) {
-            if (i != gc->number_objects - 1) {
-                memmove(gc->objects[i], gc->objects[i + 1], (size_t) (gc->number_objects - i - 1));
-            }
-
-            gc->number_objects--;
-            gc->objects = realloc(gc->objects, (size_t) ((gc->number_objects) * 8));
-
-        }
-    }
-}
-
-void start_gc() {
+bool *mark() {
     bool *mark = calloc(1, sizeof(bool) * gc->number_objects);
-
     mark_root(mark);
 
     if (DEBUG || DEBUG_HEAP) {
@@ -134,18 +108,54 @@ void start_gc() {
         }
     }
 
-    sweep(mark);
+    return mark;
+}
+
+void sweep(const bool *mark) {
+    for (int i = 0; i < gc->number_objects; ++i) {
+        if (!mark[i]) {
+            gc->heap_size -= sizeof(object_t) + sizeof(long long) * gc->objects[i]->class->number_fields;
+
+            destructor_object(gc->objects[i]);
+            gc->objects[i] = NULL;
+        }
+    }
+}
+
+void compact() {
+    for (int i = 0; i < gc->number_objects; ++i) {
+        if (gc->objects[i] == NULL) {
+            if (i != gc->number_objects - 1) {
+                if (i == 0) {
+                    gc->objects[0] = gc->objects[1];
+                    if (i + 1 != gc->number_objects - 1)
+                        memmove(gc->objects[1], gc->objects[2], (size_t) (gc->number_objects - i - 2));
+                } else {
+                    memmove(gc->objects[i], gc->objects[i + 1], (size_t) (gc->number_objects - i - 1));
+                }
+            }
+
+            gc->number_objects--;
+            gc->objects = realloc(gc->objects, (size_t) ((gc->number_objects) * 8));
+        }
+    }
+}
+
+void start_gc() {
+    bool *mark_result = mark();
+
+    sweep(mark_result);
 
     compact();
 
     if (DEBUG || DEBUG_HEAP) {
         puts("Snap after compact");
         for (int i = 0; i < gc->number_objects; ++i) {
-            printf("%i: %p - %s\n", i, gc->objects[i], mark[i] ? "true" : "false");
+            printf("%i: %p\n", i, gc->objects[i]);
         }
     }
 
-    free(mark);
+    free(mark_result);
 }
 
 bool check_gc(class_t *class) {
@@ -175,6 +185,12 @@ long long new_object(class_t *class) {
         object_t *object = constructor_object(class);
 
         gc->objects[gc->number_objects++] = object;
+
+        if (DEBUG || DEBUG_HEAP) {
+            puts("After create object");
+            free(mark());
+        }
+
         return (long long) object;
     } else {
         return (long long) NULL; //error
