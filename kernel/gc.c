@@ -7,6 +7,10 @@
 
 gc_t *gc = NULL;
 
+gc_t *get_gc(){
+    return gc;
+}
+
 void destructor_gc() {
     for (long long i = 0; i < gc->number_objects; ++i) {
         destructor_object(gc->objects[i]);
