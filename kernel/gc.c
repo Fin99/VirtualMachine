@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 #include "gc.h"
 #include "stack_frame.h"
 
@@ -34,12 +35,7 @@ int get_index_object(object_t *object){
     return 0; //error
 }
 
-void start_gc() {
-    bool *mark = malloc(sizeof(bool) * gc->number_objects);
-    for (int k = 0; k < gc->number_objects; ++k) {
-        mark[k] = false;
-    }
-
+void mark_root(bool *mark) {
     frame_t **frames = get_stack_frame()->frames;
     long long number_frames = get_stack_frame()->number_frames;
 
@@ -59,13 +55,90 @@ void start_gc() {
             }
         }
     }
+}
 
-    if(DEBUG || DEBUG_HEAP){
-        puts("Snap root");
-        for (int i = 0; i < gc->number_objects; ++i) {
-            printf("%i: %p - %s\n", i, gc->objects[i], mark[i]?"true":"false");
+void mark_object_tree(bool *mark, object_t *object) {
+    mark[get_index_object(object)] = true;
+    for (int j = 0; j < object->class->number_fields; ++j) {
+        if (object->is_field_object[j]) {
+            object_t *embedded = (object_t *) object->fields[j];
+            if (!mark[get_index_object(embedded)]) {
+                mark_object_tree(mark, embedded);
+            }
         }
     }
+}
+
+void mark_tree(bool *mark) {
+    bool *copy_mark = calloc(1, sizeof(bool) * gc->number_objects);
+    memcpy((void *) copy_mark, mark, sizeof(bool) * gc->number_objects);
+
+    for (int i = 0; i < gc->number_objects; ++i) {
+        if (copy_mark[i]) {
+            object_t *object = gc->objects[i];
+            mark_object_tree(mark, object);
+        }
+    }
+
+
+    free(copy_mark);
+}
+
+void sweep(const bool *mark) {
+    for (int i = 0; i < gc->number_objects; ++i) {
+        if (!mark[i]) {
+            gc->heap_size -= sizeof(object_t) + sizeof(long long) * gc->objects[i]->class->number_fields;
+
+            destructor_object(gc->objects[i]);
+            gc->objects[i] = NULL;
+        }
+    }
+}
+
+void compact() {
+    for (int i = 0; i < gc->number_objects; ++i) {
+        if (gc->objects[i] == NULL) {
+            memmove(gc->objects[i], gc->objects[i + 1], (size_t) (gc->number_objects - i - 1));
+
+            gc->number_objects--;
+            gc->objects = realloc(gc->objects, (size_t) ((gc->number_objects) * 8));
+
+        }
+    }
+}
+
+void start_gc() {
+    bool *mark = calloc(1, sizeof(bool) * gc->number_objects);
+
+    mark_root(mark);
+
+    if (DEBUG || DEBUG_HEAP) {
+        puts("Snap root");
+        for (int i = 0; i < gc->number_objects; ++i) {
+            printf("%i: %p - %s\n", i, gc->objects[i], mark[i] ? "true" : "false");
+        }
+    }
+
+    mark_tree(mark);
+
+    if (DEBUG || DEBUG_HEAP) {
+        puts("Snap tree");
+        for (int i = 0; i < gc->number_objects; ++i) {
+            printf("%i: %p - %s\n", i, gc->objects[i], mark[i] ? "true" : "false");
+        }
+    }
+
+    sweep(mark);
+
+    compact();
+
+    if (DEBUG || DEBUG_HEAP) {
+        puts("Snap after compact");
+        for (int i = 0; i < gc->number_objects; ++i) {
+            printf("%i: %p - %s\n", i, gc->objects[i], mark[i] ? "true" : "false");
+        }
+    }
+
     free(mark);
 }
 
