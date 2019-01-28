@@ -324,7 +324,7 @@ test_result_t test_kernel_invoke() {
 
 void create_test_class() {
     class_t *class = malloc(sizeof(class_t));
-    class->number_fields = 1;
+    class->number_fields = 2;
     class->index_class = 0;
     class->name = malloc(sizeof(char) * 5);
     strcpy(class->name, "Main");
@@ -445,8 +445,7 @@ test_result_t test_kernel_class() {
      */
 }
 
-frame_t *create_test_frame_gc() {
-    int number_object = 10;
+frame_t *create_test_frame_gc(int number_object) {
     int number_instructions = number_object + 1 + number_object / 2;
 
     instruction_t **instructions = malloc(sizeof(instruction_t *) * number_instructions);
@@ -477,10 +476,80 @@ test_result_t test_kernel_gc() {
     init_gc();
 
     create_test_class();
-    frame_t *frame = create_test_frame_gc();
+    int number_object = 10;
+    frame_t *frame = create_test_frame_gc(number_object);
     execute_frame(frame);
 
-    if (frame->work_stack[frame->index_first_element_work_stack] == 28) {
+    if (get_gc()->number_objects == number_object - number_object / 2) {
+        return TEST_SUCCESS;
+    } else {
+        return TEST_FAILED;
+    }
+    /*
+    main()
+    0: new 0
+    1: new 0
+    2: pop
+    3: new 0
+    ...
+
+    ?: return
+     */
+}
+
+frame_t *create_test_frame_gc_tree_1() {
+
+    instruction_t **instructions = malloc(sizeof(instruction_t *) * 9);
+
+    long long *index_class_1 = malloc(sizeof(long long));
+    index_class_1[0] = 0;
+    long long *index_class_2 = malloc(sizeof(long long));
+    index_class_2[0] = 0;
+    long long *index_field_1 = malloc(sizeof(long long));
+    index_field_1[0] = 0;
+
+    long long *index_local_pool_0_1 = malloc(sizeof(long long));
+    index_local_pool_0_1[0] = 0;
+    long long *index_local_pool_0_2 = malloc(sizeof(long long));
+    index_local_pool_0_2[0] = 0;
+
+    long long *index_local_pool_1_1 = malloc(sizeof(long long));
+    index_local_pool_1_1[0] = 1;
+    long long *index_local_pool_1_2 = malloc(sizeof(long long));
+    index_local_pool_1_2[0] = 1;
+    long long *index_local_pool_1_3 = malloc(sizeof(long long));
+    index_local_pool_1_3[0] = 1;
+
+    instructions[0] = constructor_instruction(0, NEW, index_class_1);
+    instructions[1] = constructor_instruction(1, STORE, index_local_pool_0_1);
+    instructions[2] = constructor_instruction(2, NEW, index_class_2);
+    instructions[3] = constructor_instruction(3, STORE, index_local_pool_1_1);
+    instructions[4] = constructor_instruction(4, LOAD, index_local_pool_1_2);
+    instructions[5] = constructor_instruction(5, LOAD, index_local_pool_0_2);
+    instructions[6] = constructor_instruction(6, SET_FIELD, index_field_1);
+    instructions[7] = constructor_instruction(7, CLEAR_LOCAL_VARIABLE, index_local_pool_1_3);
+    instructions[8] = constructor_instruction(8, RETURN, NULL);
+
+    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, 9);
+    frame->name = malloc(sizeof(char) * 5);
+    strcpy(frame->name, "main");
+
+    stack_frame_t *stack_frame = get_stack_frame();
+    stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
+    stack_frame->frames[stack_frame->number_frames++] = frame;
+
+    return frame;
+}
+
+test_result_t test_kernel_gc_tree_1() {
+    init_stack_frame();
+    init_gc();
+
+    create_test_class();
+    frame_t *frame = create_test_frame_gc_tree_1();
+    execute_frame(frame);
+
+    if (get_gc()->number_objects == 2) {
         return TEST_SUCCESS;
     } else {
         return TEST_FAILED;
@@ -491,28 +560,96 @@ test_result_t test_kernel_gc() {
     1: store 0
     2: new 0
     3: store 1
-
-    4: const 9
+    4: load 1
     5: load 0
     6: set_field 0
+    7: clear_local_variable 1
+    8: return
 
-    7: const 19
-    8: load 1
-    9: set_field 0
+    object1
+        \
+        object2 !delete ref!
+     */
+}
 
-    10: load 0
-    11: get_field 0
+frame_t *create_test_frame_gc_tree_2() {
 
-    12: load 1
-    13: get_field 0
+    instruction_t **instructions = malloc(sizeof(instruction_t *) * 9);
 
-    12: add
-    13: return
+    long long *index_class_1 = malloc(sizeof(long long));
+    index_class_1[0] = 0;
+    long long *index_class_2 = malloc(sizeof(long long));
+    index_class_2[0] = 0;
+    long long *index_field_1 = malloc(sizeof(long long));
+    index_field_1[0] = 0;
+
+    long long *index_local_pool_0_1 = malloc(sizeof(long long));
+    index_local_pool_0_1[0] = 0;
+    long long *index_local_pool_0_2 = malloc(sizeof(long long));
+    index_local_pool_0_2[0] = 0;
+    long long *index_local_pool_0_3 = malloc(sizeof(long long));
+    index_local_pool_0_3[0] = 0;
+
+    long long *index_local_pool_1_1 = malloc(sizeof(long long));
+    index_local_pool_1_1[0] = 1;
+    long long *index_local_pool_1_2 = malloc(sizeof(long long));
+    index_local_pool_1_2[0] = 1;
+
+
+    instructions[0] = constructor_instruction(0, NEW, index_class_1);
+    instructions[1] = constructor_instruction(1, STORE, index_local_pool_0_1);
+    instructions[2] = constructor_instruction(2, NEW, index_class_2);
+    instructions[3] = constructor_instruction(3, STORE, index_local_pool_1_1);
+    instructions[4] = constructor_instruction(4, LOAD, index_local_pool_1_2);
+    instructions[5] = constructor_instruction(5, LOAD, index_local_pool_0_2);
+    instructions[6] = constructor_instruction(6, SET_FIELD, index_field_1);
+    instructions[7] = constructor_instruction(7, CLEAR_LOCAL_VARIABLE, index_local_pool_0_3);
+    instructions[8] = constructor_instruction(8, RETURN, NULL);
+
+    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, 9);
+    frame->name = malloc(sizeof(char) * 5);
+    strcpy(frame->name, "main");
+
+    stack_frame_t *stack_frame = get_stack_frame();
+    stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
+    stack_frame->frames[stack_frame->number_frames++] = frame;
+
+    return frame;
+}
+
+test_result_t test_kernel_gc_tree_2() {
+    init_stack_frame();
+    init_gc();
+
+    create_test_class();
+    frame_t *frame = create_test_frame_gc_tree_2();
+    execute_frame(frame);
+
+    if (get_gc()->number_objects == 1) {
+        return TEST_SUCCESS;
+    } else {
+        return TEST_FAILED;
+    }
+    /*
+    main()
+    0: new 0
+    1: store 0
+    2: new 0
+    3: store 1
+    4: load 1
+    5: load 0
+    6: set_field 0
+    7: clear_local_variable 0
+    8: return
+
+    object1 !delete ref!
+        \
+        object2
      */
 }
 
 int main() {
-    int number_test_functions = 8;
+    int number_test_functions = 10;
     test_result_t(*test_functions[number_test_functions])();
     test_functions[0] = test_kernel_div_i;
     test_functions[1] = test_kernel_add;
@@ -522,6 +659,8 @@ int main() {
     test_functions[5] = test_kernel_invoke;
     test_functions[6] = test_kernel_class;
     test_functions[7] = test_kernel_gc;
+    test_functions[8] = test_kernel_gc_tree_1;
+    test_functions[9] = test_kernel_gc_tree_2;
 
     char *name_test_functions[number_test_functions];
     name_test_functions[0] = "test_kernel_div_i():";
@@ -532,6 +671,8 @@ int main() {
     name_test_functions[5] = "test_kernel_invoke():";
     name_test_functions[6] = "test_kernel_class():";
     name_test_functions[7] = "test_kernel_gc():";
+    name_test_functions[8] = "test_kernel_gc_tree_1():";
+    name_test_functions[9] = "test_kernel_gc_tree_2():";
 
     for (int i = 0; i < number_test_functions; ++i) {
         puts(name_test_functions[i]);
@@ -542,6 +683,7 @@ int main() {
             fputs("Test failed\n", stderr);
             fflush(stderr);
         }
+        puts("-----------------------------------");
     }
 
     destructor_stack_frame();
