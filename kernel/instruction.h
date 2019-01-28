@@ -21,11 +21,13 @@ enum type_instruction {
     LOAD,
     CONST,
     STORE,
+    POP,
 
     INVOKE,
 
     RETURN,
-    I_RETURN
+    I_RETURN,
+    O_RETURN
 };
 
 typedef struct instruction instruction_t;

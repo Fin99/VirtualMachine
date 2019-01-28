@@ -52,6 +52,9 @@ void print_name_instruction(instruction_t instruction) {
         case STORE:
             printf("store %lli", instruction.args[0]);
             break;
+        case POP:
+            printf("pop");
+            break;
         case INVOKE:
             printf("invoke %s", find_frame(instruction.args[0])->name);
             break;
@@ -104,15 +107,6 @@ void invoke(stack_frame_t *stack_frame, instruction_t instruction) {
     execute_frame(stack_frame->stack_frame[stack_frame->index_first_element_stack_frame]);
 }
 
-void ireturn(stack_frame_t *stack_frame, long long **work_stack) {
-    stack_frame->index_first_element_stack_frame--;
-
-    long long value = **work_stack;
-    frame_t *old_frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
-    old_frame->work_stack[++old_frame->index_first_element_work_stack] = value;
-    old_frame->is_work_stack_element_object[old_frame->index_first_element_work_stack] = false;
-}
-
 void get_field(long long int **work_stack, frame_t *frame, long long int number_field, bool **is_object) {
     object_t *object = (object_t *) (*work_stack)[frame->index_first_element_work_stack];
     (*work_stack)[frame->index_first_element_work_stack] = object->fields[number_field];
@@ -125,6 +119,24 @@ void set_field(long long int **work_stack, frame_t *frame, long long int number_
     object->fields[number_field] = value;
     object->is_field_object[number_field] = (*is_object)[frame->index_first_element_work_stack - 1];
     frame->index_first_element_work_stack -= 2;
+}
+
+void ireturn(stack_frame_t *stack_frame, long long **work_stack) {
+    stack_frame->index_first_element_stack_frame--;
+
+    long long value = **work_stack;
+    frame_t *old_frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
+    old_frame->work_stack[++old_frame->index_first_element_work_stack] = value;
+    old_frame->is_work_stack_element_object[old_frame->index_first_element_work_stack] = false;
+}
+
+void oreturn(stack_frame_t *stack_frame, long long **work_stack) {
+    stack_frame->index_first_element_stack_frame--;
+
+    long long value = **work_stack;
+    frame_t *old_frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
+    old_frame->work_stack[++old_frame->index_first_element_work_stack] = value;
+    old_frame->is_work_stack_element_object[old_frame->index_first_element_work_stack] = true;
 }
 
 void print_work_stack(frame_t *frame) {
@@ -196,6 +208,9 @@ void execute_instruction(instruction_t instruction) {
             (*is_local_pool_element_object)[*instruction.args] =
                     (*is_work_stack_element_object)[frame->index_first_element_work_stack + 1];
             break;
+        case POP:
+            frame->index_first_element_work_stack--;
+            break;
         case INVOKE:
             invoke(stack_frame, instruction);
             break;
@@ -204,6 +219,9 @@ void execute_instruction(instruction_t instruction) {
             break;
         case I_RETURN:
             ireturn(stack_frame, work_stack);
+            break;
+        case O_RETURN:
+            oreturn(stack_frame, work_stack);
             break;
     }
 

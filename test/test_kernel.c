@@ -446,17 +446,25 @@ test_result_t test_kernel_class() {
 }
 
 frame_t *create_test_frame_gc() {
-    int number_object = 10;
+    int number_object = 6;
+    int number_instructions = number_object + 1 + number_object / 2;
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * (number_object + 1));
-    for (int i = 0; i < number_object; ++i) {
-        long long *index_class_1 = malloc(sizeof(long long));
-        index_class_1[0] = 0;
-        instructions[i] = constructor_instruction(i, NEW, index_class_1);
+    instruction_t **instructions = malloc(sizeof(instruction_t *) * number_instructions);
+    for (int i = 0; i < number_instructions - 1; ++i) {
+        if (i % 3 == 1) {
+            long long *index_class_1 = malloc(sizeof(long long));
+            index_class_1[0] = 0;
+            instructions[i] = constructor_instruction(i, NEW, index_class_1);
+//            instructions[i] = constructor_instruction(i, POP, NULL);
+        } else {
+            long long *index_class_1 = malloc(sizeof(long long));
+            index_class_1[0] = 0;
+            instructions[i] = constructor_instruction(i, NEW, index_class_1);
+        }
     }
-    instructions[number_object] = constructor_instruction(number_object + 1, RETURN, NULL);
+    instructions[number_instructions - 1] = constructor_instruction(number_instructions - 1, RETURN, NULL);
 
-    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, number_object + 1);
+    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, number_instructions);
     frame->name = malloc(sizeof(char) * 5);
     strcpy(frame->name, "main");
 

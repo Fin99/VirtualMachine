@@ -16,7 +16,8 @@
 typedef enum type_frame type_frame_t;
 enum type_frame {
     VOID_RETURN,
-    INT_RETURN
+    INT_RETURN,
+    OBJECT_RETURN
 };
 
 typedef struct frame frame_t;
