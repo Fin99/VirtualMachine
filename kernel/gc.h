@@ -16,6 +16,8 @@ struct gc {
     long long heap_size;
 };
 
+void destructor_gc();
+
 long long new_object(class_t *class);
 
 void init_gc();

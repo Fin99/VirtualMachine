@@ -7,6 +7,7 @@
 
 void destructor_class(class_t *class) {
     free(class->name);
+    free(class);
 }
 
 object_t *constructor_object(class_t *class) {

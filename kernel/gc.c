@@ -18,7 +18,7 @@ void init_gc() {
     if (gc != NULL) {
         destructor_gc();
     }
-    gc = malloc(sizeof(gc));
+    gc = malloc(sizeof(gc_t));
 
     gc->objects = NULL;
     gc->number_objects = 0;
@@ -66,6 +66,7 @@ void start_gc() {
             printf("%i: %p - %s\n", i, gc->objects[i], mark[i]?"true":"false");
         }
     }
+    free(mark);
 }
 
 bool check_gc(class_t *class) {
@@ -89,7 +90,7 @@ bool check_gc(class_t *class) {
 
 long long new_object(class_t *class) {
     if (check_gc(class)) {
-        gc->objects = realloc(gc->objects, sizeof(object_t *));
+        gc->objects = realloc(gc->objects, (size_t) ((gc->number_objects + 1) * 8));
         gc->heap_size += sizeof(object_t) + sizeof(long long) * class->number_fields;
 
         object_t *object = constructor_object(class);

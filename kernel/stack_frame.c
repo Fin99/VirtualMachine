@@ -21,7 +21,7 @@ void destructor_stack_frame() {
 
 void init_stack_frame() {
     if (stack_frame != NULL) {
-        destructor_stack_frame(stack_frame);
+        destructor_stack_frame();
     }
     stack_frame = malloc(sizeof(stack_frame_t));
 

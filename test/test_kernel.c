@@ -322,6 +322,18 @@ test_result_t test_kernel_invoke() {
      */
 }
 
+void create_test_class() {
+    class_t *class = malloc(sizeof(class_t));
+    class->number_fields = 1;
+    class->index_class = 0;
+    class->name = malloc(sizeof(char) * 5);
+    strcpy(class->name, "Main");
+
+    stack_frame_t *stack_frame = get_stack_frame();
+    stack_frame->classes[stack_frame->number_classes++] = class;
+
+}
+
 frame_t *create_test_frame_class() {
     long long *index_class_1 = malloc(sizeof(long long));
     index_class_1[0] = 0;
@@ -394,17 +406,6 @@ frame_t *create_test_frame_class() {
     return frame;
 }
 
-void create_test_class() {
-    class_t *class = malloc(sizeof(class_t));
-    class->number_fields = 1;
-    class->index_class = 0;
-    class->name = "Main";
-
-    stack_frame_t *stack_frame = get_stack_frame();
-    stack_frame->classes[stack_frame->number_classes++] = class;
-
-}
-
 test_result_t test_kernel_class() {
     init_stack_frame();
     init_gc();
@@ -444,9 +445,69 @@ test_result_t test_kernel_class() {
      */
 }
 
+frame_t *create_test_frame_gc() {
+    int number_object = 10;
+
+    instruction_t **instructions = malloc(sizeof(instruction_t *) * (number_object + 1));
+    for (int i = 0; i < number_object; ++i) {
+        long long *index_class_1 = malloc(sizeof(long long));
+        index_class_1[0] = 0;
+        instructions[i] = constructor_instruction(i, NEW, index_class_1);
+    }
+    instructions[number_object] = constructor_instruction(number_object + 1, RETURN, NULL);
+
+    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, number_object + 1);
+    frame->name = malloc(sizeof(char) * 5);
+    strcpy(frame->name, "main");
+
+    stack_frame_t *stack_frame = get_stack_frame();
+    stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
+    stack_frame->frames[stack_frame->number_frames++] = frame;
+
+    return frame;
+}
+
+test_result_t test_kernel_gc() {
+    init_stack_frame();
+    init_gc();
+
+    create_test_class();
+    frame_t *frame = create_test_frame_gc();
+    execute_frame(frame);
+
+    if (frame->work_stack[frame->index_first_element_work_stack] == 28) {
+        return TEST_SUCCESS;
+    } else {
+        return TEST_FAILED;
+    }
+    /*
+    main()
+    0: new 0
+    1: store 0
+    2: new 0
+    3: store 1
+
+    4: const 9
+    5: load 0
+    6: set_field 0
+
+    7: const 19
+    8: load 1
+    9: set_field 0
+
+    10: load 0
+    11: get_field 0
+
+    12: load 1
+    13: get_field 0
+
+    12: add
+    13: return
+     */
+}
 
 int main() {
-    int number_test_functions = 7;
+    int number_test_functions = 8;
     test_result_t(*test_functions[number_test_functions])();
     test_functions[0] = test_kernel_div_i;
     test_functions[1] = test_kernel_add;
@@ -455,7 +516,7 @@ int main() {
     test_functions[4] = test_kernel_compare_2;
     test_functions[5] = test_kernel_invoke;
     test_functions[6] = test_kernel_class;
-//    test_functions[7] = test_kernel_div_i;
+    test_functions[7] = test_kernel_gc;
 
     char *name_test_functions[number_test_functions];
     name_test_functions[0] = "test_kernel_div_i():";
@@ -465,6 +526,7 @@ int main() {
     name_test_functions[4] = "test_kernel_compare_2():";
     name_test_functions[5] = "test_kernel_invoke():";
     name_test_functions[6] = "test_kernel_class():";
+    name_test_functions[7] = "test_kernel_gc():";
 
     for (int i = 0; i < number_test_functions; ++i) {
         puts(name_test_functions[i]);
@@ -476,6 +538,9 @@ int main() {
             fflush(stderr);
         }
     }
+
+    destructor_stack_frame();
+    destructor_gc();
 
     return 0;
 }
