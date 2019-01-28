@@ -98,7 +98,9 @@ void sweep(const bool *mark) {
 void compact() {
     for (int i = 0; i < gc->number_objects; ++i) {
         if (gc->objects[i] == NULL) {
-            memmove(gc->objects[i], gc->objects[i + 1], (size_t) (gc->number_objects - i - 1));
+            if (i != gc->number_objects - 1) {
+                memmove(gc->objects[i], gc->objects[i + 1], (size_t) (gc->number_objects - i - 1));
+            }
 
             gc->number_objects--;
             gc->objects = realloc(gc->objects, (size_t) ((gc->number_objects) * 8));
