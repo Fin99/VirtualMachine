@@ -7,12 +7,12 @@ frame_t *constructor_frame(long long index_frame, type_frame_t type_frame, instr
     frame->index_frame = index_frame;
     frame->type_frame = type_frame;
 
-    frame->work_stack = malloc(sizeof(long long) * WORK_STACK_SIZE_MAX);
+    frame->work_stack = calloc(1, sizeof(long long) * WORK_STACK_SIZE_MAX);
     frame->index_first_element_work_stack = -1;
-    frame->is_work_stack_element_object = malloc(sizeof(bool) * WORK_STACK_SIZE_MAX);
+    frame->is_work_stack_element_object = calloc(1, sizeof(bool) * WORK_STACK_SIZE_MAX);
 
-    frame->local_pool = malloc(sizeof(long long) * LOCAL_POOL_SIZE_MAX);
-    frame->is_local_pool_element_object = malloc(sizeof(bool) * LOCAL_POOL_SIZE_MAX);
+    frame->local_pool = calloc(1, sizeof(long long) * LOCAL_POOL_SIZE_MAX);
+    frame->is_local_pool_element_object = calloc(1, sizeof(bool) * LOCAL_POOL_SIZE_MAX);
 
     frame->instructions = instructions;
     frame->number_instructions = number_instructions;
