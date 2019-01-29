@@ -6,29 +6,34 @@
 #include <memory.h>
 #include "string.h"
 
-char** split(const char *str, const char *delimiter, size_t *len){
-    char *text, *p, *first, **array;
-    int c;
-    char** ret;
-
-    *len = 0;
-    text=strdup(str);//strdup not standard
-    if(text==NULL) return NULL;
-    for(c=0,p=text;NULL!=(p=strtok(p, delimiter));p=NULL, c++)//count item
-        if(c==0) first=p; //first token top
-
-    ret=(char**)malloc(sizeof(char*)*c+1);//+1 for NULL
-    if(ret==NULL){
-        free(text);
-        return NULL;
+void destructor_split_string(char **split_str, unsigned long size) {
+    for (int i = 0; i < size; ++i) {
+        free(split_str[i]);
     }
-    //memmove?
-    strcpy(text, str+(first-text));//skip until top token
-    array=ret;
-    for(p=text;NULL!=(p=strtok(p, delimiter));p=NULL){
-        *array++=p;
+
+    free(split_str);
+}
+
+char **split(const char *str, const char *delimiter, size_t *size) {
+    char *str_cpy = malloc(strlen(str) + 1);
+    strcpy(str_cpy, str);
+    *size = 0;
+
+    char **split_str = NULL;
+    char *part = strtok(str_cpy, delimiter);
+
+    while (part != NULL) {
+        (*size)++;
+
+        split_str = realloc(split_str, (8 * (*size)));
+        split_str[(*size) - 1] = malloc(strlen(part) + 1);
+
+        strcpy(split_str[(*size) - 1], part);
+
+        part = strtok(NULL, delimiter);
     }
-    *array=NULL;
-    *len=c;
-    return ret;
+
+    free(str_cpy);
+
+    return split_str;
 }

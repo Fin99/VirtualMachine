@@ -7,6 +7,8 @@
 #include <memory.h>
 
 
-char** split(const char *str, const char *delimiter, size_t *len);
+char **split(const char *str, const char *delimiter, unsigned long *len);
+
+void destructor_split_string(char **split_str, size_t size);
 
 #endif //VM_STRING_H
