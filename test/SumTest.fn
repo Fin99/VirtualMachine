@@ -1,5 +1,14 @@
-main()
- 2: iconst_1
- 3: iconst_2
- 4: iadd
- 5: return
+class Main{
+number_field=1
+}
+function main(){
+0=new 0
+1=store 0
+2=new 0
+3=store 1
+4=load 1
+5=load 0
+6=set_field 0
+7=clear_local_variable 0
+8=return
+}
