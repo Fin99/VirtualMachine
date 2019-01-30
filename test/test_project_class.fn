@@ -2,9 +2,9 @@ class Main{
 number_field=1
 }
 function void main(){
-0:new 0
+0:new Main
 1:store 0
-2:new 0
+2:new Main
 3:store 1
 4:const 9
 5:load 0
