@@ -69,7 +69,15 @@ void load_frame(pars_element_t pars_element) {
 
         long long *instruction_args = malloc(sizeof(long long) * pars_element.args[i].number_values);
         for (int j = 0; j < pars_element.args[i].number_values; ++j) {
-            instruction_args[j] = strtoll(pars_element.args[i].values_arg[j], NULL, 10);
+            char *end;
+            long long arg = strtoll(pars_element.args[i].values_arg[j], &end, 10);
+            if (!strcmp(end, "")) {
+                instruction_args[j] = arg;
+            } else {
+                free(instruction_args);
+                instruction_args = malloc(strlen(end) + 1);
+                strcpy((char *) instruction_args, end);
+            }
         }
 
         instructions[i] = constructor_instruction(i, type_instruction, instruction_args);
@@ -88,8 +96,8 @@ void load_frame(pars_element_t pars_element) {
         //todo error
     }
 
-    char *frame_name = malloc(strlen(pars_element.pre_args[0].values_arg[0]) + 1);
-    strcpy(frame_name, pars_element.pre_args[0].values_arg[0]);
+    char *frame_name = malloc(strlen(pars_element.pre_args[1].values_arg[0]) + 1);
+    strcpy(frame_name, pars_element.pre_args[1].values_arg[0]);
 
     frame_t *frame = constructor_frame(count_frames++, frame_name, type_frame, instructions,
                                        (long long int) pars_element.number_args);

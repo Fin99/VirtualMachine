@@ -11,13 +11,23 @@ void destructor_pars_element(pars_element_t *pars_element, size_t number_element
     for (int j = 0; j < number_elements; ++j) {
         for (int i = 0; i < pars_element[j].number_pre_args; ++i) {
             free(pars_element[j].pre_args[i].name_arg);
-            free(pars_element[j].pre_args[i].values_arg);
+            for (int k = 0; k < pars_element[j].pre_args[i].number_values; ++k) {
+                free(pars_element[j].pre_args[i].values_arg[k]);
+            }
+            if (pars_element[j].pre_args[i].number_values != 0) {
+                free(pars_element[j].pre_args[i].values_arg);
+            }
         }
         free(pars_element[j].pre_args);
 
         for (int i = 0; i < pars_element[j].number_args; ++i) {
             free(pars_element[j].args[i].name_arg);
-            free(pars_element[j].args[i].values_arg);
+            for (int k = 0; k < pars_element[j].args[i].number_values; ++k) {
+                free(pars_element[j].args[i].values_arg[k]);
+            }
+            if (pars_element[j].args[i].number_values != 0) {
+                free(pars_element[j].args[i].values_arg);
+            }
         }
         free(pars_element[j].args);
     }
@@ -70,6 +80,8 @@ arg_t *pars_function_args(char *text, size_t *number_args) {
 
         if (size != 1) {
             set_values_arg(&args[i], size - 1, &split_arg[1]);
+        } else {
+            args[i].number_values = 0;
         }
 
         destructor_split_string(split_arg, size);
