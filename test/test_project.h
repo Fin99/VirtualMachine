@@ -1,0 +1,8 @@
+//
+// Created by fin on 30.01.19.
+//
+
+#ifndef VIRTUALMACHINE_TEST_PROJECT_H
+#define VIRTUALMACHINE_TEST_PROJECT_H
+
+#endif //VIRTUALMACHINE_TEST_PROJECT_H
