@@ -20,12 +20,14 @@ typedef struct arg arg_t;
 struct pars_element {
     type_parse_element_t type_parse_element;
     arg_t *pre_args;
+    size_t number_pre_args;
     arg_t *args;
+    size_t number_args;
 };
 typedef struct pars_element pars_element_t;
 
-pars_element_t *pars_text(char *text);
+pars_element_t *pars_text(char *text, size_t *number_elements);
 
-void destructor_pars_element(pars_element_t *pars_element);
+void destructor_pars_element(pars_element_t *pars_element, size_t number_elements);
 
 #endif //VIRTUALMACHINE_PARS_ELEMENT_H

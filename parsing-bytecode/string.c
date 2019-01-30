@@ -6,7 +6,7 @@
 #include <memory.h>
 #include "string.h"
 
-void destructor_split_string(char **split_str, unsigned long size) {
+void destructor_split_string(char **split_str, size_t size) {
     for (int i = 0; i < size; ++i) {
         free(split_str[i]);
     }
