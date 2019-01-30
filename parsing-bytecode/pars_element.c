@@ -60,6 +60,13 @@ arg_t *pars_function_pre_args(char *text, size_t *number_args) {
 
     set_values_arg(&args[1], 1, &split_string[1]);
 
+    if(*number_args == 3){
+        args[2].name_arg = malloc(strlen("number_args") + 1);
+        strcpy(args[2].name_arg, "number_args");
+
+        set_values_arg(&args[2], 1, &split_string[2]);
+    }
+
     destructor_split_string(split_string, *number_args);
 
     return args;

@@ -99,8 +99,13 @@ void load_frame(pars_element_t pars_element) {
     char *frame_name = malloc(strlen(pars_element.pre_args[1].values_arg[0]) + 1);
     strcpy(frame_name, pars_element.pre_args[1].values_arg[0]);
 
+    long long number_args = 0;
+    if (pars_element.number_pre_args == 3) {
+        number_args = strtoll(pars_element.pre_args[2].values_arg[0], NULL, 10);
+    }
+
     frame_t *frame = constructor_frame(count_frames++, frame_name, type_frame, instructions,
-                                       (long long int) pars_element.number_args);
+                                       (long long int) pars_element.number_args, number_args);
 
     get_stack_frame()->frames[get_stack_frame()->number_frames++] = frame;
 }

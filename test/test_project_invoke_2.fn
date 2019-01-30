@@ -1,0 +1,12 @@
+function void main(){
+0:const 14
+1:const 7
+2:invoke a()
+3:return
+}
+function void a() 2{
+0:load 0
+1:load 1
+2:add
+3:i_return
+}

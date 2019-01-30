@@ -2,11 +2,12 @@
 #include "frame.h"
 
 frame_t *constructor_frame(long long index_frame, char *name, type_frame_t type_frame, instruction_t **instructions,
-                           long long number_instructions) {
+                           long long number_instructions, long long number_args) {
     frame_t *frame = malloc(sizeof(frame_t));
     frame->index_frame = index_frame;
     frame->name = name;
     frame->type_frame = type_frame;
+    frame->number_args = number_args;
 
     frame->work_stack = calloc(1, sizeof(long long) * WORK_STACK_SIZE_MAX);
     frame->index_first_element_work_stack = -1;

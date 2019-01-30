@@ -108,8 +108,20 @@ void compare(frame_t *frame, long long int **work_stack, bool **is_object) {
     frame->index_first_element_work_stack--;
 }
 
-void invoke(stack_frame_t *stack_frame, instruction_t instruction) {
-    stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = find_frame((char *) instruction.args);
+void invoke(frame_t *frame, stack_frame_t *stack_frame, instruction_t instruction, long long int **work_stack,
+            bool **is_object) {
+    frame_t *new_frame = find_frame((char *) instruction.args);
+    for (int i = 0; i < new_frame->number_args; ++i) {
+        long long element = (*work_stack)[frame->index_first_element_work_stack];
+        new_frame->local_pool[i] = element;
+        if ((*is_object)[frame->index_first_element_work_stack]) {
+            new_frame->is_local_pool_element_object[i] = true;
+        } else {
+            new_frame->is_local_pool_element_object[i] = false;
+        }
+        frame->index_first_element_work_stack--;
+    }
+    stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = new_frame;
     execute_frame(stack_frame->stack_frame[stack_frame->index_first_element_stack_frame]);
 }
 
@@ -227,7 +239,7 @@ void execute_instruction(instruction_t instruction) {
             (*is_local_pool_element_object)[*instruction.args] = false;
             break;
         case INVOKE:
-            invoke(stack_frame, instruction);
+            invoke(frame, stack_frame, instruction, work_stack, is_work_stack_element_object);
             break;
         case RETURN:
             if (get_gc() != NULL && get_gc()->number_objects > 0)

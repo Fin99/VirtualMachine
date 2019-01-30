@@ -3,6 +3,7 @@
 //
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "test.h"
 #include "../kernel/gc.h"
 #include "../kernel/stack_frame.h"
@@ -81,6 +82,18 @@ test_result_t test_project_invoke() {
     }
 }
 
+test_result_t test_project_invoke_2() {
+    start("test_project_invoke_2.fn");
+
+    frame_t *frame = find_frame("main()");
+
+    if (frame->work_stack[frame->index_first_element_work_stack] == 21) {
+        return TEST_SUCCESS;
+    } else {
+        return TEST_FAILED;
+    }
+}
+
 test_result_t test_project_class() {
     start("test_project_class.fn");
 
@@ -124,7 +137,7 @@ test_result_t test_project_gc_tree_2() {
 }
 
 int main() {
-    int number_test_functions = 10;
+    int number_test_functions = 11;
     test_result_t(*test_functions[number_test_functions])();
     test_functions[0] = test_project_div_i;
     test_functions[1] = test_project_add;
@@ -132,10 +145,11 @@ int main() {
     test_functions[3] = test_project_compare_1;
     test_functions[4] = test_project_compare_2;
     test_functions[5] = test_project_invoke;
-    test_functions[6] = test_project_class;
-    test_functions[7] = test_project_gc;
-    test_functions[8] = test_project_gc_tree_1;
-    test_functions[9] = test_project_gc_tree_2;
+    test_functions[6] = test_project_invoke_2;
+    test_functions[7] = test_project_class;
+    test_functions[8] = test_project_gc;
+    test_functions[9] = test_project_gc_tree_1;
+    test_functions[10] = test_project_gc_tree_2;
 
     char *name_test_functions[number_test_functions];
     name_test_functions[0] = "test_project_div_i():";
@@ -144,10 +158,11 @@ int main() {
     name_test_functions[3] = "test_project_compare_1():";
     name_test_functions[4] = "test_project_compare_2():";
     name_test_functions[5] = "test_project_invoke():";
-    name_test_functions[6] = "test_project_class():";
-    name_test_functions[7] = "test_project_gc():";
-    name_test_functions[8] = "test_project_gc_tree_1():";
-    name_test_functions[9] = "test_project_gc_tree_2():";
+    name_test_functions[6] = "test_project_invoke_2():";
+    name_test_functions[7] = "test_project_class():";
+    name_test_functions[8] = "test_project_gc():";
+    name_test_functions[9] = "test_project_gc_tree_1():";
+    name_test_functions[10] = "test_project_gc_tree_2():";
 
     for (int i = 0; i < number_test_functions; ++i) {
         puts(name_test_functions[i]);
@@ -157,6 +172,7 @@ int main() {
         } else {
             fputs("Test failed\n", stderr);
             fflush(stderr);
+            exit(0);
         }
         puts("-----------------------------------");
     }
