@@ -13,6 +13,8 @@ void start(char *file_name) {
 
     load_class_and_frame(file_name);
 
+    get_stack_frame()->stack_frame[++get_stack_frame()->index_first_element_stack_frame] = find_frame("main()");
+
     execute_frame(find_frame("main()"));
 //
 //    destructor_gc();
