@@ -250,11 +250,11 @@ test_result_t test_kernel_compare_2() {
 frame_t *create_test_frame_invoke() {
     long long *args1 = malloc(sizeof(long long));
     args1[0] = 14;
-    long long *args2 = malloc(strlen("a") + 1);
-    strcpy((char *) args2, "a");
+    char *args2 = malloc(strlen("a") + 1);
+    strcpy(args2, "a");
 
     instruction_t *instruction1 = constructor_instruction(0, CONST, args1);
-    instruction_t *instruction2 = constructor_instruction(1, INVOKE, args2);
+    instruction_t *instruction2 = constructor_instruction(1, INVOKE, (long long *) args2);
     instruction_t *instruction3 = constructor_instruction(2, ADD, NULL);
     instruction_t *instruction4 = constructor_instruction(3, RETURN, NULL);
 
@@ -333,8 +333,8 @@ void create_test_class() {
 }
 
 frame_t *create_test_frame_class() {
-    long long *index_class_1 = malloc(sizeof(long long));
-    index_class_1[0] = 0;
+    char *index_class_1 = malloc(strlen("Main") + 1);
+    strcpy(index_class_1, "Main");
 
     long long *index_class_1_local_pool = malloc(sizeof(long long));
     index_class_1_local_pool[0] = 0;
@@ -349,8 +349,8 @@ frame_t *create_test_frame_class() {
     number_field_class_1_1[0] = 0;
 
 
-    long long *index_class_2 = malloc(sizeof(long long));
-    index_class_2[0] = 0;
+    char *index_class_2 = malloc(strlen("Main") + 1);
+    strcpy(index_class_2, "Main");
 
     long long *index_class_2_local_pool = malloc(sizeof(long long));
     index_class_2_local_pool[0] = 1;
@@ -371,9 +371,9 @@ frame_t *create_test_frame_class() {
 
     instruction_t **instructions = malloc(sizeof(instruction_t *) * 16);
 
-    instructions[0] = constructor_instruction(0, NEW, index_class_1);
+    instructions[0] = constructor_instruction(0, NEW, (long long *) index_class_1);
     instructions[1] = constructor_instruction(1, STORE, index_class_1_local_pool);
-    instructions[2] = constructor_instruction(2, NEW, index_class_2);
+    instructions[2] = constructor_instruction(2, NEW, (long long *) index_class_2);
     instructions[3] = constructor_instruction(3, STORE, index_class_2_local_pool);
 
     instructions[4] = constructor_instruction(4, CONST, const_value_1);
@@ -451,9 +451,9 @@ frame_t *create_test_frame_gc(int number_object) {
         if (i % 3 == 1) {
             instructions[i] = constructor_instruction(i, POP, NULL);
         } else {
-            long long *index_class_1 = malloc(sizeof(long long));
-            index_class_1[0] = 0;
-            instructions[i] = constructor_instruction(i, NEW, index_class_1);
+            char *index_class_1 = malloc(strlen("Main") + 1);
+            strcpy(index_class_1, "Main");
+            instructions[i] = constructor_instruction(i, NEW, (long long int *) index_class_1);
         }
     }
     instructions[number_instructions - 1] = constructor_instruction(number_instructions - 1, RETURN, NULL);
@@ -499,10 +499,10 @@ frame_t *create_test_frame_gc_tree_1() {
 
     instruction_t **instructions = malloc(sizeof(instruction_t *) * 9);
 
-    long long *index_class_1 = malloc(sizeof(long long));
-    index_class_1[0] = 0;
-    long long *index_class_2 = malloc(sizeof(long long));
-    index_class_2[0] = 0;
+    char *index_class_1 = malloc(strlen("Main") + 1);
+    strcpy(index_class_1, "Main");
+    char *index_class_2 = malloc(strlen("Main") + 1);
+    strcpy(index_class_2, "Main");
     long long *index_field_1 = malloc(sizeof(long long));
     index_field_1[0] = 0;
 
@@ -518,9 +518,9 @@ frame_t *create_test_frame_gc_tree_1() {
     long long *index_local_pool_1_3 = malloc(sizeof(long long));
     index_local_pool_1_3[0] = 1;
 
-    instructions[0] = constructor_instruction(0, NEW, index_class_1);
+    instructions[0] = constructor_instruction(0, NEW, (long long *) index_class_1);
     instructions[1] = constructor_instruction(1, STORE, index_local_pool_0_1);
-    instructions[2] = constructor_instruction(2, NEW, index_class_2);
+    instructions[2] = constructor_instruction(2, NEW, (long long *) index_class_2);
     instructions[3] = constructor_instruction(3, STORE, index_local_pool_1_1);
     instructions[4] = constructor_instruction(4, LOAD, index_local_pool_1_2);
     instructions[5] = constructor_instruction(5, LOAD, index_local_pool_0_2);
@@ -574,10 +574,10 @@ frame_t *create_test_frame_gc_tree_2() {
 
     instruction_t **instructions = malloc(sizeof(instruction_t *) * 9);
 
-    long long *index_class_1 = malloc(sizeof(long long));
-    index_class_1[0] = 0;
-    long long *index_class_2 = malloc(sizeof(long long));
-    index_class_2[0] = 0;
+    char *index_class_1 = malloc(strlen("Main") + 1);
+    strcpy(index_class_1, "Main");
+    char *index_class_2 = malloc(strlen("Main") + 1);
+    strcpy(index_class_2, "Main");
     long long *index_field_1 = malloc(sizeof(long long));
     index_field_1[0] = 0;
 
@@ -594,9 +594,9 @@ frame_t *create_test_frame_gc_tree_2() {
     index_local_pool_1_2[0] = 1;
 
 
-    instructions[0] = constructor_instruction(0, NEW, index_class_1);
+    instructions[0] = constructor_instruction(0, NEW, (long long int *) index_class_1);
     instructions[1] = constructor_instruction(1, STORE, index_local_pool_0_1);
-    instructions[2] = constructor_instruction(2, NEW, index_class_2);
+    instructions[2] = constructor_instruction(2, NEW, (long long int *) index_class_2);
     instructions[3] = constructor_instruction(3, STORE, index_local_pool_1_1);
     instructions[4] = constructor_instruction(4, LOAD, index_local_pool_1_2);
     instructions[5] = constructor_instruction(5, LOAD, index_local_pool_0_2);
@@ -647,6 +647,11 @@ test_result_t test_kernel_gc_tree_2() {
 }
 
 int main() {
+    char *end;
+    long long l = strtoll("10", &end, 10);
+    puts(end);
+    printf("%lli", l);
+
     int number_test_functions = 10;
     test_result_t(*test_functions[number_test_functions])();
     test_functions[0] = test_kernel_div_i;
