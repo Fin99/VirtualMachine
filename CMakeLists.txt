@@ -11,12 +11,17 @@ set(Kernel kernel/instruction.h kernel/instruction.c
         kernel/stack_frame.h kernel/stack_frame.c
         kernel/frame.h kernel/frame.c kernel/class.c kernel/class.h kernel/gc.h kernel/gc.c)
 
+set(Project ${Parser} ${Kernel})
+
 set(TestParser test/test.h
-        test/test_parsing.h test/test_parsing.c)
+        )
 set(TestKernel test/test.h
         test/test_kernel.c test/test_kernel.h)
+set(TestProject ${Project} test/test_project.c test/test_project.h)
 
 
 add_executable(TestParser ${TestParser} ${Parser})
 
 add_executable(TestKernel ${TestKernel} ${Kernel})
+
+add_executable(TestProject ${TestProject} ${Project})
