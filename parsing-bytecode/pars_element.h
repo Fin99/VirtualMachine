@@ -13,7 +13,8 @@ typedef enum type_parse_element type_parse_element_t;
 
 struct arg {
     char *name_arg;
-    char *value_arg;
+    size_t number_values;
+    char **values_arg;
 };
 typedef struct arg arg_t;
 
