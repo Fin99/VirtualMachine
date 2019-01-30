@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "stack_frame.h"
 
 stack_frame_t *stack_frame = NULL;
@@ -40,9 +41,9 @@ stack_frame_t *get_stack_frame() {
     return stack_frame;
 }
 
-frame_t *find_frame(long long index_frame) {
+frame_t *find_frame(char *frame_name) {
     for (long long i = 0; i < stack_frame->number_frames; ++i) {
-        if (stack_frame->frames[i]->index_frame == index_frame) {
+        if (!strcmp(stack_frame->frames[i]->name, frame_name)) {
             return stack_frame->frames[i];
         }
     }
@@ -50,9 +51,9 @@ frame_t *find_frame(long long index_frame) {
     return NULL;
 }
 
-class_t *find_class(long long index_class){
+class_t *find_class(char *class_name){
     for (long long i = 0; i < stack_frame->number_frames; ++i) {
-        if (stack_frame->classes[i]->index_class == index_class) {
+        if (!strcmp(stack_frame->classes[i]->name,class_name)) {
             return stack_frame->classes[i];
         }
     }

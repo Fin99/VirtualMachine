@@ -36,8 +36,8 @@ void destructor_stack_frame();
 
 stack_frame_t *get_stack_frame();
 
-frame_t *find_frame(long long index_frame);
+frame_t *find_frame(char *frame_name);
 
-class_t *find_class(long long index_class);
+class_t *find_class(char *class_name);
 
 #endif //VIRTUALMACHINE_STACKFRAME_H

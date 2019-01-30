@@ -11,7 +11,7 @@ set(Kernel kernel/instruction.h kernel/instruction.c
         kernel/stack_frame.h kernel/stack_frame.c
         kernel/frame.h kernel/frame.c kernel/class.c kernel/class.h kernel/gc.h kernel/gc.c)
 
-set(Project ${Parser} ${Kernel})
+set(Project ${Parser} ${Kernel} vm.c vm.h)
 
 set(TestParser test/test.h
         )

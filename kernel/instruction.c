@@ -35,7 +35,7 @@ void print_name_instruction(instruction_t instruction) {
             printf("compare");
             break;
         case NEW:
-            printf("new %s", find_class(instruction.args[0])->name);
+            printf("new %s", (char *) instruction.args[0]);
             break;
         case GET_FIELD:
             printf("get_field %lli", instruction.args[0]);
@@ -59,7 +59,7 @@ void print_name_instruction(instruction_t instruction) {
             printf("clear_local_variable %lli", instruction.args[0]);
             break;
         case INVOKE:
-            printf("invoke %s", find_frame(instruction.args[0])->name);
+            printf("invoke %s", (char *) instruction.args[0]);
             break;
         case RETURN:
             printf("return");
@@ -109,7 +109,7 @@ void compare(frame_t *frame, long long int **work_stack, bool **is_object) {
 }
 
 void invoke(stack_frame_t *stack_frame, instruction_t instruction) {
-    stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = find_frame(*instruction.args);
+    stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = find_frame((char *) instruction.args[0]);
     execute_frame(stack_frame->stack_frame[stack_frame->index_first_element_stack_frame]);
 }
 
@@ -170,7 +170,7 @@ void print_local_pool(frame_t *frame) {
 }
 
 void new(frame_t *frame, instruction_t instruction, long long **work_stack, bool **is_work_stack_element_object) {
-    long long object = new_object(find_class(*instruction.args));
+    long long object = new_object(find_class((char *) instruction.args[0]));
     (*work_stack)[++frame->index_first_element_work_stack] = object;
     (*is_work_stack_element_object)[frame->index_first_element_work_stack] = true;
 }

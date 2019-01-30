@@ -250,8 +250,8 @@ test_result_t test_kernel_compare_2() {
 frame_t *create_test_frame_invoke() {
     long long *args1 = malloc(sizeof(long long));
     args1[0] = 14;
-    long long *args2 = malloc(sizeof(long long));
-    args2[0] = 0;
+    long long *args2 = malloc(strlen("a") + 1);
+    strcpy((char *) args2, "a");
 
     instruction_t *instruction1 = constructor_instruction(0, CONST, args1);
     instruction_t *instruction2 = constructor_instruction(1, INVOKE, args2);
