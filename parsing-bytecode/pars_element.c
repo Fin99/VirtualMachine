@@ -45,7 +45,7 @@ arg_t *pars_function_args(char *text, size_t *number_args) {
     arg_t *args = malloc(sizeof(arg_t) * (*number_args));
     for (int i = 0; i < *number_args; ++i) {
         unsigned long size;
-        char **split_arg = split(split_args[i], "=", &size);
+        char **split_arg = split(split_args[i], ":", &size);
 
         args[i].name_arg = malloc(strlen(split_arg[0]) + 1);
         strcpy(args[i].name_arg, split_arg[0]);

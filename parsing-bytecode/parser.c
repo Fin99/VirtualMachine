@@ -13,16 +13,23 @@ void load_class_and_frame(char *file_name) {
     size_t number_elements;
     pars_element_t *pars_elements = pars_text(text, &number_elements);
     for (int i = 0; i < number_elements; ++i) {
-        printf("%d\n", pars_elements[i].type_parse_element);
+        switch (pars_elements[i].type_parse_element) {
+            case CLASS:
+                printf("class ");
+                break;
+            case FUNCTION:
+                printf("function ");
+                break;
+        }
 
         for (int j = 0; j < pars_elements[i].number_pre_args; ++j) {
-            printf("%s=%s\n", pars_elements[i].pre_args[j].name_arg, pars_elements[i].pre_args[j].value_arg);
+            printf("%s{\n", pars_elements[i].pre_args[j].value_arg);
         }
 
         for (int j = 0; j < pars_elements[i].number_args; ++j) {
-            printf("%s=%s\n", pars_elements[i].args[j].name_arg, pars_elements[i].args[j].value_arg);
+            printf("%s:%s\n", pars_elements[i].args[j].name_arg, pars_elements[i].args[j].value_arg);
         }
-        puts("");
+        puts("}");
     }
 
     free(text);
