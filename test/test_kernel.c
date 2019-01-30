@@ -23,9 +23,9 @@ frame_t *create_test_frame_div_i() {
     instructions[2] = instruction3;
     instructions[3] = instruction4;
 
-    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, 4);
-    frame->name = malloc(sizeof(char) * 5);
-    strcpy(frame->name, "main");
+    char *frame_name = malloc(sizeof(char) * 5);
+    strcpy(frame_name, "main");
+    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
@@ -72,9 +72,9 @@ frame_t *create_test_frame_add() {
     instructions[2] = instruction3;
     instructions[3] = instruction4;
 
-    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, 4);
-    frame->name = malloc(sizeof(char) * 5);
-    strcpy(frame->name, "main");
+    char *frame_name = malloc(sizeof(char) * 5);
+    strcpy(frame_name, "main");
+    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
@@ -120,9 +120,9 @@ frame_t *create_test_frame_mul() {
     instructions[2] = instruction3;
     instructions[3] = instruction4;
 
-    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, 4);
-    frame->name = malloc(sizeof(char) * 5);
-    strcpy(frame->name, "main");
+    char *frame_name = malloc(sizeof(char) * 5);
+    strcpy(frame_name, "main");
+    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
@@ -168,9 +168,9 @@ frame_t *create_test_frame_compare_1() {
     instructions[2] = instruction3;
     instructions[3] = instruction4;
 
-    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, 4);
-    frame->name = malloc(sizeof(char) * 5);
-    strcpy(frame->name, "main");
+    char *frame_name = malloc(sizeof(char) * 5);
+    strcpy(frame_name, "main");
+    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
@@ -216,9 +216,9 @@ frame_t *create_test_frame_compare_2() {
     instructions[2] = instruction3;
     instructions[3] = instruction4;
 
-    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, 4);
-    frame->name = malloc(sizeof(char) * 5);
-    strcpy(frame->name, "main");
+    char *frame_name = malloc(sizeof(char) * 5);
+    strcpy(frame_name, "main");
+    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
@@ -264,9 +264,9 @@ frame_t *create_test_frame_invoke() {
     instructions[2] = instruction3;
     instructions[3] = instruction4;
 
-    frame_t *frame = constructor_frame(1, VOID_RETURN, instructions, 4);
-    frame->name = malloc(sizeof(char) * 5);
-    strcpy(frame->name, "main");
+    char *frame_name = malloc(sizeof(char) * 5);
+    strcpy(frame_name, "main");
+    frame_t *frame = constructor_frame(1, frame_name, VOID_RETURN, instructions, 4);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
@@ -286,9 +286,9 @@ frame_t *create_test_frame_invoked() {
     instructions[0] = instruction1;
     instructions[1] = instruction4;
 
-    frame_t *frame = constructor_frame(0, INT_RETURN, instructions, 2);
-    frame->name = malloc(sizeof(char) * 2);
-    strcpy(frame->name, "a");
+    char *frame_name = malloc(sizeof(char) * 2);
+    strcpy(frame_name, "a");
+    frame_t *frame = constructor_frame(0, frame_name, INT_RETURN, instructions, 2);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
@@ -323,11 +323,9 @@ test_result_t test_kernel_invoke() {
 }
 
 void create_test_class() {
-    class_t *class = malloc(sizeof(class_t));
-    class->number_fields = 2;
-    class->index_class = 0;
-    class->name = malloc(sizeof(char) * 5);
-    strcpy(class->name, "Main");
+    char *class_name = malloc(sizeof(char) * 5);
+    strcpy(class_name, "Main");
+    class_t *class = constructor_class(0, class_name, 2);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->classes[stack_frame->number_classes++] = class;
@@ -395,9 +393,9 @@ frame_t *create_test_frame_class() {
     instructions[14] = constructor_instruction(14, ADD, NULL);
     instructions[15] = constructor_instruction(15, RETURN, NULL);
 
-    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, 16);
-    frame->name = malloc(sizeof(char) * 5);
-    strcpy(frame->name, "main");
+    char *frame_name = malloc(sizeof(char) * 5);
+    strcpy(frame_name, "main");
+    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 16);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
@@ -460,9 +458,9 @@ frame_t *create_test_frame_gc(int number_object) {
     }
     instructions[number_instructions - 1] = constructor_instruction(number_instructions - 1, RETURN, NULL);
 
-    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, number_instructions);
-    frame->name = malloc(sizeof(char) * 5);
-    strcpy(frame->name, "main");
+    char *frame_name = malloc(sizeof(char) * 5);
+    strcpy(frame_name, "main");
+    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, number_instructions);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
@@ -530,9 +528,9 @@ frame_t *create_test_frame_gc_tree_1() {
     instructions[7] = constructor_instruction(7, CLEAR_LOCAL_VARIABLE, index_local_pool_1_3);
     instructions[8] = constructor_instruction(8, RETURN, NULL);
 
-    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, 9);
-    frame->name = malloc(sizeof(char) * 5);
-    strcpy(frame->name, "main");
+    char *frame_name = malloc(sizeof(char) * 5);
+    strcpy(frame_name, "main");
+    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 9);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
@@ -606,9 +604,9 @@ frame_t *create_test_frame_gc_tree_2() {
     instructions[7] = constructor_instruction(7, CLEAR_LOCAL_VARIABLE, index_local_pool_0_3);
     instructions[8] = constructor_instruction(8, RETURN, NULL);
 
-    frame_t *frame = constructor_frame(0, VOID_RETURN, instructions, 9);
-    frame->name = malloc(sizeof(char) * 5);
-    strcpy(frame->name, "main");
+    char *frame_name = malloc(sizeof(char) * 5);
+    strcpy(frame_name, "main");
+    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 9);
 
     stack_frame_t *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;

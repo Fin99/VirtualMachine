@@ -24,6 +24,8 @@ struct object {
     bool *is_field_object;
 };
 
+class_t *constructor_class(long long index_class, char *class_name, long long number_field);
+
 void destructor_class(class_t *class);
 
 object_t *constructor_object(class_t *class);

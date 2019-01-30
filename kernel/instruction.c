@@ -230,8 +230,8 @@ void execute_instruction(instruction_t instruction) {
             invoke(stack_frame, instruction);
             break;
         case RETURN:
-//            if (get_gc() != NULL && get_gc()->number_objects > 0)
-//                start_gc();
+            if (get_gc() != NULL && get_gc()->number_objects > 0)
+                start_gc();
             stack_frame->index_first_element_stack_frame--;
             break;
         case I_RETURN:

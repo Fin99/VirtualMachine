@@ -38,7 +38,7 @@ struct frame {
     bool *is_local_pool_element_object;
 };
 
-frame_t *constructor_frame(long long index_frame, type_frame_t type_frame, instruction_t **instructions,
+frame_t *constructor_frame(long long index_frame, char *name, type_frame_t type_frame, instruction_t **instructions,
                            long long number_instructions);
 
 void destructor_frame(frame_t *frame);
