@@ -1,0 +1,15 @@
+class Main{
+number_field=1
+}
+function void main(){
+0:new 0
+1:new 0
+2:pop
+3:new 0
+4:pop
+5:new 0
+6:new 0
+7:pop
+8:new 0
+9:return
+}

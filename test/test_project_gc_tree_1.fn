@@ -1,0 +1,14 @@
+class Main{
+number_field=1
+}
+function void main(){
+0:new 0
+1:store 0
+2:new 0
+3:store 1
+4:load 1
+5:load 0
+6:set_field 0
+7:clear_local_variable 1
+8:return
+}

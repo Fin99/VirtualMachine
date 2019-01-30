@@ -1,0 +1,6 @@
+function void main(){
+0:const 4
+1:const 5
+2:mul
+3:return
+}

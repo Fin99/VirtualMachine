@@ -1,0 +1,6 @@
+function void main(){
+0:const 7
+1:const 14
+2:compare
+3:return
+}
