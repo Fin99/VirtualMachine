@@ -139,7 +139,7 @@ test_result_t test_project_gc_tree_2() {
 test_result_t test_project_loop() {
     start("test_project_loop.fn");
 
-    if (get_stack_frame()->frames[0]->local_pool[2] == 12) {
+    if (get_stack_frame()->frames[0]->local_pool[2] == 20) {
         return TEST_SUCCESS;
     } else {
         return TEST_FAILED;

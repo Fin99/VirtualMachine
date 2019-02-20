@@ -37,16 +37,16 @@ enum type_instruction {
 
 typedef struct instruction instruction_t;
 struct instruction {
-    long long index_instruction;
+    int index_instruction;
 
     type_instruction_t type_instruction;
 
-    long long *args;
+    int64_t *args;
 };
 
-long long *execute_instruction(instruction_t instruction);
+int *execute_instruction(instruction_t instruction);
 
-instruction_t *constructor_instruction(long long index, type_instruction_t type, long long *args);
+instruction_t *constructor_instruction(int index, type_instruction_t type, int64_t *args);
 
 void destructor_instruction(instruction_t *instruction);
 

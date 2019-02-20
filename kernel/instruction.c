@@ -5,7 +5,7 @@
 #include "gc.h"
 
 
-instruction_t *constructor_instruction(long long index, type_instruction_t type, long long *args) {
+instruction_t *constructor_instruction(int index, type_instruction_t type, int64_t *args) {
     instruction_t *instruction = malloc(sizeof(instruction_t));
 
     instruction->index_instruction = index;
@@ -38,25 +38,25 @@ void print_name_instruction(instruction_t instruction) {
             printf("new %s", (char *) instruction.args);
             break;
         case GET_FIELD:
-            printf("get_field %lli", instruction.args[0]);
+            printf("get_field %li", instruction.args[0]);
             break;
         case SET_FIELD:
-            printf("set_field %lli", instruction.args[0]);
+            printf("set_field %li", instruction.args[0]);
             break;
         case LOAD:
-            printf("load %lli", instruction.args[0]);
+            printf("load %li", instruction.args[0]);
             break;
         case CONST:
-            printf("const %lli", instruction.args[0]);
+            printf("const %li", instruction.args[0]);
             break;
         case STORE:
-            printf("store %lli", instruction.args[0]);
+            printf("store %li", instruction.args[0]);
             break;
         case POP:
             printf("pop");
             break;
         case CLEAR_LOCAL_VARIABLE:
-            printf("clear_local_variable %lli", instruction.args[0]);
+            printf("clear_local_variable %li", instruction.args[0]);
             break;
         case INVOKE:
             printf("invoke %s", (char *) instruction.args);
@@ -71,29 +71,29 @@ void print_name_instruction(instruction_t instruction) {
             printf("o_return");
             break;
         case IF_ACMPEQ:
-            printf("if_acmpeq %lli", instruction.args[0]);
+            printf("if_acmpeq %li", instruction.args[0]);
             break;
         case IF_ACMPNE:
-            printf("if_acmpne %lli", instruction.args[0]);
+            printf("if_acmpne %li", instruction.args[0]);
             break;
         case GOTO:
-            printf("goto %lli", instruction.args[0]);
+            printf("goto %li", instruction.args[0]);
             break;
     }
 }
 
-void add(frame_t *frame, long long int **work_stack, bool **is_object) {
+void add(frame_t *frame, int64_t **work_stack, bool **is_object) {
 
     long long first_element = (*work_stack)[frame->index_first_element_work_stack];
-    long long second_element = (*work_stack)[--frame->index_first_element_work_stack];
+    int64_t second_element = (*work_stack)[--frame->index_first_element_work_stack];
 
     (*work_stack)[frame->index_first_element_work_stack] = first_element + second_element;
     (*is_object)[frame->index_first_element_work_stack] = false;
 }
 
-void div_i(frame_t *frame, long long int **work_stack, bool **is_object) {
-    long long first_element = (*work_stack)[frame->index_first_element_work_stack];
-    long long second_element = (*work_stack)[frame->index_first_element_work_stack - 1];
+void div_i(frame_t *frame, int64_t **work_stack, bool **is_object) {
+    int64_t first_element = (*work_stack)[frame->index_first_element_work_stack];
+    int64_t second_element = (*work_stack)[frame->index_first_element_work_stack - 1];
 
     (*work_stack)[frame->index_first_element_work_stack] = first_element / second_element;
     (*work_stack)[frame->index_first_element_work_stack - 1] = first_element % second_element;
@@ -102,26 +102,26 @@ void div_i(frame_t *frame, long long int **work_stack, bool **is_object) {
     (*is_object)[frame->index_first_element_work_stack - 1] = false;
 }
 
-void mul(frame_t *frame, long long int **work_stack, bool **is_object) {
-    long long first_element = (*work_stack)[frame->index_first_element_work_stack];
-    long long second_element = (*work_stack)[--frame->index_first_element_work_stack];
+void mul(frame_t *frame, int64_t **work_stack, bool **is_object) {
+    int64_t first_element = (*work_stack)[frame->index_first_element_work_stack];
+    int64_t second_element = (*work_stack)[--frame->index_first_element_work_stack];
 
     (*work_stack)[frame->index_first_element_work_stack] = first_element * second_element;
     (*is_object)[frame->index_first_element_work_stack] = false;
 }
 
-void compare(frame_t *frame, long long int **work_stack, bool **is_object) {
+void compare(frame_t *frame, int64_t **work_stack, bool **is_object) {
     (*work_stack)[frame->index_first_element_work_stack - 1] = (*work_stack)[frame->index_first_element_work_stack] -
                                                                (*work_stack)[frame->index_first_element_work_stack - 1];
     (*is_object)[frame->index_first_element_work_stack - 1] = false;
     frame->index_first_element_work_stack--;
 }
 
-void invoke(frame_t *frame, stack_frame_t *stack_frame, instruction_t instruction, long long int **work_stack,
+void invoke(frame_t *frame, stack_frame_t *stack_frame, instruction_t instruction, int64_t **work_stack,
             bool **is_object) {
     frame_t *new_frame = find_frame((char *) instruction.args);
     for (int i = 0; i < new_frame->number_args; ++i) {
-        long long element = (*work_stack)[frame->index_first_element_work_stack];
+        int64_t element = (*work_stack)[frame->index_first_element_work_stack];
         new_frame->local_pool[i] = element;
         if ((*is_object)[frame->index_first_element_work_stack]) {
             new_frame->is_local_pool_element_object[i] = true;
@@ -134,45 +134,45 @@ void invoke(frame_t *frame, stack_frame_t *stack_frame, instruction_t instructio
     execute_frame(stack_frame->stack_frame[stack_frame->index_first_element_stack_frame]);
 }
 
-void get_field(long long int **work_stack, frame_t *frame, long long int number_field, bool **is_object) {
+void get_field(int64_t **work_stack, frame_t *frame, int number_field, bool **is_object) {
     object_t *object = (object_t *) (*work_stack)[frame->index_first_element_work_stack];
     (*work_stack)[frame->index_first_element_work_stack] = object->fields[number_field];
     (*is_object)[frame->index_first_element_work_stack] = object->is_field_object[number_field];
 }
 
-void set_field(long long int **work_stack, frame_t *frame, long long int number_field, bool **is_object) {
+void set_field(int64_t **work_stack, frame_t *frame, int number_field, bool **is_object) {
     object_t *object = (object_t *) (*work_stack)[frame->index_first_element_work_stack];
-    long long value = (*work_stack)[frame->index_first_element_work_stack - 1];
+    int64_t value = (*work_stack)[frame->index_first_element_work_stack - 1];
     object->fields[number_field] = value;
     object->is_field_object[number_field] = (*is_object)[frame->index_first_element_work_stack - 1];
     frame->index_first_element_work_stack -= 2;
 }
 
-void ireturn(stack_frame_t *stack_frame, long long **work_stack) {
+void ireturn(stack_frame_t *stack_frame, int64_t **work_stack) {
     stack_frame->index_first_element_stack_frame--;
 
-    long long value = **work_stack;
+    int64_t value = **work_stack;
     frame_t *old_frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
     old_frame->work_stack[++old_frame->index_first_element_work_stack] = value;
     old_frame->is_work_stack_element_object[old_frame->index_first_element_work_stack] = false;
 }
 
-void oreturn(stack_frame_t *stack_frame, long long **work_stack) {
+void oreturn(stack_frame_t *stack_frame, int64_t **work_stack) {
     stack_frame->index_first_element_stack_frame--;
 
-    long long value = **work_stack;
+    int64_t value = **work_stack;
     frame_t *old_frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
     old_frame->work_stack[++old_frame->index_first_element_work_stack] = value;
     old_frame->is_work_stack_element_object[old_frame->index_first_element_work_stack] = true;
 }
 
 void print_work_stack(frame_t *frame) {
-    printf("Work stack(size = %lli): ", frame->index_first_element_work_stack + 1);
-    for (long long i = frame->index_first_element_work_stack; i >= 0; --i) {
+    printf("Work stack(size = %i): ", frame->index_first_element_work_stack + 1);
+    for (int i = frame->index_first_element_work_stack; i >= 0; --i) {
         if (frame->is_work_stack_element_object[i]) {
             printf("~%p(object)~", (void *) frame->work_stack[i]);
         } else {
-            printf("~%lli~", frame->work_stack[i]);
+            printf("~%li~", frame->work_stack[i]);
         }
     }
     printf("\n");
@@ -180,25 +180,25 @@ void print_work_stack(frame_t *frame) {
 
 void print_local_pool(frame_t *frame) {
     printf("Local pool(first %i elements): ", DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT);
-    for (long long i = 0; i < DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT; ++i) {
+    for (int i = 0; i < DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT; ++i) {
         if (frame->is_local_pool_element_object[i]) {
             printf("|%p(object)|", (void *) frame->local_pool[i]);
         } else {
-            printf("|%lli|", frame->local_pool[i]);
+            printf("|%li|", frame->local_pool[i]);
         }
     }
     printf("\n");
 }
 
-void new(frame_t *frame, instruction_t instruction, long long **work_stack, bool **is_work_stack_element_object) {
-    long long object = new_object(find_class((char *) instruction.args));
+void new(frame_t *frame, instruction_t instruction, int64_t **work_stack, bool **is_work_stack_element_object) {
+    uint64_t object = new_object(find_class((char *) instruction.args));
     (*work_stack)[++frame->index_first_element_work_stack] = object;
     (*is_work_stack_element_object)[frame->index_first_element_work_stack] = true;
 }
 
-bool if_acmpeq(frame_t *frame, long long **work_stack) {
-    long long first_element = (*work_stack)[frame->index_first_element_work_stack];
-    long long second_element = (*work_stack)[frame->index_first_element_work_stack - 1];
+bool if_acmpeq(frame_t *frame, int64_t **work_stack) {
+    int64_t first_element = (*work_stack)[frame->index_first_element_work_stack];
+    int64_t second_element = (*work_stack)[frame->index_first_element_work_stack - 1];
 
     frame->index_first_element_work_stack -= 2;
 
@@ -209,15 +209,15 @@ bool if_acmpeq(frame_t *frame, long long **work_stack) {
     }
 }
 
-long long *execute_instruction(instruction_t instruction) {
+int *execute_instruction(instruction_t instruction) {
     stack_frame_t *stack_frame = get_stack_frame();
     frame_t *frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
-    long long **local_pool = &frame->local_pool;
-    long long **work_stack = &frame->work_stack;
+    int64_t **local_pool = &frame->local_pool;
+    int64_t **work_stack = &frame->work_stack;
     bool **is_work_stack_element_object = &frame->is_work_stack_element_object;
     bool **is_local_pool_element_object = &frame->is_local_pool_element_object;
 
-    long long *index_jump = NULL;
+    int *index_jump = NULL;
 
     switch (instruction.type_instruction) {
         case ADD:
@@ -236,10 +236,10 @@ long long *execute_instruction(instruction_t instruction) {
             new(frame, instruction, work_stack, is_work_stack_element_object);
             break;
         case GET_FIELD:
-            get_field(work_stack, frame, *instruction.args, is_work_stack_element_object);
+            get_field(work_stack, frame, (int) *instruction.args, is_work_stack_element_object);
             break;
         case SET_FIELD:
-            set_field(work_stack, frame, *instruction.args, is_work_stack_element_object);
+            set_field(work_stack, frame, (int) *instruction.args, is_work_stack_element_object);
             break;
         case LOAD:
             (*work_stack)[++frame->index_first_element_work_stack] = (*local_pool)[*instruction.args];
@@ -279,18 +279,18 @@ long long *execute_instruction(instruction_t instruction) {
         case IF_ACMPEQ:
             if (if_acmpeq(frame, work_stack)) {
                 index_jump = malloc(8);
-                *index_jump = *instruction.args;
+                *index_jump = (int) *instruction.args;
             }
             break;
         case IF_ACMPNE:
             if (!if_acmpeq(frame, work_stack)) {
                 index_jump = malloc(8);
-                *index_jump = *instruction.args;
+                *index_jump = (int) *instruction.args;
             }
             break;
         case GOTO:
             index_jump = malloc(8);
-            *index_jump = *instruction.args;
+            *index_jump = (int) *instruction.args;
             break;
     }
 

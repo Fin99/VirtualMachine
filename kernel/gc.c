@@ -12,7 +12,7 @@ gc_t *get_gc(){
 }
 
 void destructor_gc() {
-    for (long long i = 0; i < gc->number_objects; ++i) {
+    for (uint64_t i = 0; i < gc->number_objects; ++i) {
         destructor_object(gc->objects[i]);
     }
     free(gc->objects);
@@ -41,7 +41,7 @@ int get_index_object(object_t *object){
 
 void mark_root(bool *mark) {
     frame_t **frames = get_stack_frame()->frames;
-    long long number_frames = get_stack_frame()->number_frames;
+    int number_frames = get_stack_frame()->number_frames;
 
     for (int i = 0; i < number_frames; ++i) {
         frame_t *frame = frames[i];
@@ -114,7 +114,7 @@ bool *mark() {
 void sweep(const bool *mark) {
     for (int i = 0; i < gc->number_objects; ++i) {
         if (!mark[i]) {
-            gc->heap_size -= sizeof(object_t) + sizeof(long long) * gc->objects[i]->class->number_fields;
+            gc->heap_size -= sizeof(object_t) + sizeof(int64_t) * gc->objects[i]->class->number_fields;
 
             destructor_object(gc->objects[i]);
             gc->objects[i] = NULL;
@@ -159,9 +159,9 @@ void start_gc() {
 }
 
 bool check_gc(class_t *class) {
-    long long size_object = sizeof(object_t) + sizeof(long long) * class->number_fields;
+    uint64_t size_object = sizeof(object_t) + sizeof(int64_t) * class->number_fields;
 
-    if (true) {//todo size_object + gc->heap_size > MAX_HEAP_SIZE * 0.8
+    if (true) {
         start_gc();
     }
 
@@ -170,17 +170,17 @@ bool check_gc(class_t *class) {
     }
 
     if(DEBUG || DEBUG_HEAP){
-        printf("Max heap size: %i. Heap size: %lli. Load: %lli%%\n", MAX_HEAP_SIZE,
+        printf("Max heap size: %i. Heap size: %lu. Load: %lu%%\n", MAX_HEAP_SIZE,
                gc->heap_size, (gc->heap_size + size_object) * 100 / MAX_HEAP_SIZE);
     }
 
     return true;
 }
 
-long long new_object(class_t *class) {
+uint64_t new_object(class_t *class) {
     if (check_gc(class)) {
         gc->objects = realloc(gc->objects, (size_t) ((gc->number_objects + 1) * 8));
-        gc->heap_size += sizeof(object_t) + sizeof(long long) * class->number_fields;
+        gc->heap_size += sizeof(object_t) + sizeof(int64_t) * class->number_fields;
 
         object_t *object = constructor_object(class);
 
@@ -191,8 +191,8 @@ long long new_object(class_t *class) {
             free(mark());
         }
 
-        return (long long) object;
+        return (uint64_t) object;
     } else {
-        return (long long) NULL; //error
+        return (uint64_t) NULL; //error
     }
 }

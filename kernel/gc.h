@@ -12,8 +12,8 @@
 typedef struct gc gc_t;
 struct gc {
     object_t **objects;
-    long long number_objects;
-    long long heap_size;
+    uint64_t number_objects;
+    uint64_t heap_size;
 };
 
 gc_t *get_gc();
@@ -22,7 +22,7 @@ void destructor_gc();
 
 void start_gc();
 
-long long new_object(class_t *class);
+uint64_t new_object(class_t *class);
 
 void init_gc();
 

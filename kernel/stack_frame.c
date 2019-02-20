@@ -7,12 +7,12 @@ stack_frame_t *stack_frame = NULL;
 void destructor_stack_frame() {
     free(stack_frame->stack_frame);
 
-    for (long long i = 0; i < stack_frame->number_frames; ++i) {
+    for (int i = 0; i < stack_frame->number_frames; ++i) {
         destructor_frame(stack_frame->frames[i]);
     }
     free(stack_frame->frames);
 
-    for (long long i = 0; i < stack_frame->number_classes; ++i) {
+    for (int i = 0; i < stack_frame->number_classes; ++i) {
         destructor_class(stack_frame->classes[i]);
     }
     free(stack_frame->classes);
@@ -42,7 +42,7 @@ stack_frame_t *get_stack_frame() {
 }
 
 frame_t *find_frame(char *frame_name) {
-    for (long long i = 0; i < stack_frame->number_frames; ++i) {
+    for (int i = 0; i < stack_frame->number_frames; ++i) {
         if (!strcmp(stack_frame->frames[i]->name, frame_name)) {
             return stack_frame->frames[i];
         }
@@ -52,7 +52,7 @@ frame_t *find_frame(char *frame_name) {
 }
 
 class_t *find_class(char *class_name){
-    for (long long i = 0; i < stack_frame->number_frames; ++i) {
+    for (int i = 0; i < stack_frame->number_frames; ++i) {
         if (!strcmp(stack_frame->classes[i]->name,class_name)) {
             return stack_frame->classes[i];
         }

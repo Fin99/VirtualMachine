@@ -6,25 +6,26 @@
 #define VIRTUALMACHINE_CLASS_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct class class_t;
 struct class {
-    long long index_class;
+    int index_class;
     char *name;
 
-    long long number_fields;
+    int number_fields;
 };
 
 typedef struct object object_t;
 struct object {
     class_t *class;
 
-    long long *fields;
+    int64_t *fields;
 
     bool *is_field_object;
 };
 
-class_t *constructor_class(long long index_class, char *class_name, long long number_field);
+class_t *constructor_class(int index_class, char *class_name, int number_field);
 
 void destructor_class(class_t *class);
 
