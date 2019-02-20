@@ -14,23 +14,21 @@
 #define WORK_STACK_SIZE_MAX 128
 #define LOCAL_POOL_SIZE_MAX 128
 
-typedef enum type_frame type_frame_t;
 enum type_frame {
     VOID_RETURN,
     INT_RETURN,
     OBJECT_RETURN
 };
 
-typedef struct frame frame_t;
 struct frame {
-    type_frame_t type_frame;
+    enum type_frame type_frame;
 
     int index_frame;
     char *name;
 
     int number_args;
 
-    instruction_t **instructions;
+    struct instruction **instructions;
     int number_instructions;
 
     int64_t *work_stack;
@@ -41,11 +39,11 @@ struct frame {
     bool *is_local_pool_element_object;
 };
 
-frame_t *constructor_frame(int index_frame, char *name, type_frame_t type_frame, instruction_t **instructions,
+struct frame *constructor_frame(int index_frame, char *name, enum type_frame type_frame, struct instruction **instructions,
                            int number_instructions, int number_args);
 
-void destructor_frame(frame_t *frame);
+void destructor_frame(struct frame *frame);
 
-void execute_frame(frame_t *frame);
+void execute_frame(struct frame *frame);
 
 #endif //VM_FRAME_H

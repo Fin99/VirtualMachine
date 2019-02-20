@@ -9,20 +9,19 @@
 
 #define MAX_HEAP_SIZE 4096
 
-typedef struct gc gc_t;
 struct gc {
-    object_t **objects;
+    struct object **objects;
     uint64_t number_objects;
     uint64_t heap_size;
 };
 
-gc_t *get_gc();
+struct gc *get_gc();
 
 void destructor_gc();
 
 void start_gc();
 
-uint64_t new_object(class_t *class);
+uint64_t new_object(struct class *class);
 
 void init_gc();
 

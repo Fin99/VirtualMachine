@@ -9,10 +9,10 @@
 #include "../kernel/stack_frame.h"
 #include "../vm.h"
 
-test_result_t test_project_div_i() {
+enum test_result test_project_div_i() {
     start("test_project_div_i.fn");
 
-    frame_t *frame = find_frame("main()");
+    struct frame *frame = find_frame("main()");
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 3 &&
         frame->work_stack[frame->index_first_element_work_stack - 1] == 3) {
@@ -22,10 +22,10 @@ test_result_t test_project_div_i() {
     }
 }
 
-test_result_t test_project_add() {
+enum test_result test_project_add() {
     start("test_project_add.fn");
 
-    frame_t *frame = find_frame("main()");
+    struct frame *frame = find_frame("main()");
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 16) {
         return TEST_SUCCESS;
@@ -34,10 +34,10 @@ test_result_t test_project_add() {
     }
 }
 
-test_result_t test_project_mul() {
+enum test_result test_project_mul() {
     start("test_project_mul.fn");
 
-    frame_t *frame = find_frame("main()");
+    struct frame *frame = find_frame("main()");
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 20) {
         return TEST_SUCCESS;
@@ -46,10 +46,10 @@ test_result_t test_project_mul() {
     }
 }
 
-test_result_t test_project_compare_1() {
+enum test_result test_project_compare_1() {
     start("test_project_compare_1.fn");
 
-    frame_t *frame = find_frame("main()");
+    struct frame *frame = find_frame("main()");
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 0) {
         return TEST_SUCCESS;
@@ -58,10 +58,10 @@ test_result_t test_project_compare_1() {
     }
 }
 
-test_result_t test_project_compare_2() {
+enum test_result test_project_compare_2() {
     start("test_project_compare_2.fn");
 
-    frame_t *frame = find_frame("main()");
+    struct frame *frame = find_frame("main()");
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 7) {
         return TEST_SUCCESS;
@@ -70,10 +70,10 @@ test_result_t test_project_compare_2() {
     }
 }
 
-test_result_t test_project_invoke() {
+enum test_result test_project_invoke() {
     start("test_project_invoke.fn");
 
-    frame_t *frame = find_frame("main()");
+    struct frame *frame = find_frame("main()");
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 21) {
         return TEST_SUCCESS;
@@ -82,10 +82,10 @@ test_result_t test_project_invoke() {
     }
 }
 
-test_result_t test_project_invoke_2() {
+enum test_result test_project_invoke_2() {
     start("test_project_invoke_2.fn");
 
-    frame_t *frame = find_frame("main()");
+    struct frame *frame = find_frame("main()");
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 21) {
         return TEST_SUCCESS;
@@ -94,10 +94,10 @@ test_result_t test_project_invoke_2() {
     }
 }
 
-test_result_t test_project_class() {
+enum test_result test_project_class() {
     start("test_project_class.fn");
 
-    frame_t *frame = find_frame("main()");
+    struct frame *frame = find_frame("main()");
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 28) {
         return TEST_SUCCESS;
@@ -106,7 +106,7 @@ test_result_t test_project_class() {
     }
 }
 
-test_result_t test_project_gc() {
+enum test_result test_project_gc() {
     start("test_project_gc.fn");
 
     if (get_gc()->number_objects == 3) {
@@ -116,7 +116,7 @@ test_result_t test_project_gc() {
     }
 }
 
-test_result_t test_project_gc_tree_1() {
+enum test_result test_project_gc_tree_1() {
     start("test_project_gc_tree_1.fn");
 
     if (get_gc()->number_objects == 2) {
@@ -126,7 +126,7 @@ test_result_t test_project_gc_tree_1() {
     }
 }
 
-test_result_t test_project_gc_tree_2() {
+enum test_result test_project_gc_tree_2() {
     start("test_project_gc_tree_2.fn");
 
     if (get_gc()->number_objects == 1) {
@@ -136,7 +136,7 @@ test_result_t test_project_gc_tree_2() {
     }
 }
 
-test_result_t test_project_loop() {
+enum test_result test_project_loop() {
     start("test_project_loop.fn");
 
     if (get_stack_frame()->frames[0]->local_pool[2] == 20) {
@@ -148,7 +148,7 @@ test_result_t test_project_loop() {
 
 int main() {
     int number_test_functions = 12;
-    test_result_t(*test_functions[number_test_functions])();
+    enum test_result(*test_functions[number_test_functions])();
     test_functions[0] = test_project_div_i;
     test_functions[1] = test_project_add;
     test_functions[2] = test_project_mul;

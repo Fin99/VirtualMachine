@@ -18,15 +18,14 @@
 #define DEBUG_INSTRUCTION 0
 #define DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT 3
 
-typedef struct stack_frame stack_frame_t;
 struct stack_frame {
-    frame_t **stack_frame;
+    struct frame **stack_frame;
     int index_first_element_stack_frame;
 
-    frame_t **frames;
+    struct frame **frames;
     int number_frames;
 
-    class_t **classes;
+    struct class **classes;
     int number_classes;
 };
 
@@ -34,10 +33,10 @@ void init_stack_frame();
 
 void destructor_stack_frame();
 
-stack_frame_t *get_stack_frame();
+struct stack_frame *get_stack_frame();
 
-frame_t *find_frame(char *frame_name);
+struct frame *find_frame(char *frame_name);
 
-class_t *find_class(char *class_name);
+struct class *find_class(char *class_name);
 
 #endif //VIRTUALMACHINE_STACKFRAME_H

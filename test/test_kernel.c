@@ -6,18 +6,18 @@
 #include "../kernel/stack_frame.h"
 #include "../kernel/gc.h"
 
-frame_t *create_test_frame_div_i() {
-    long long *args1 = malloc(sizeof(long long));
+struct frame *create_test_frame_div_i() {
+    int64_t *args1 = malloc(sizeof(int64_t));
     args1[0] = 4;
-    long long *args2 = malloc(sizeof(long long));
+    int64_t *args2 = malloc(sizeof(int64_t));
     args2[0] = 15;
 
-    instruction_t *instruction1 = constructor_instruction(0, CONST, args1);
-    instruction_t *instruction2 = constructor_instruction(1, CONST, args2);
-    instruction_t *instruction3 = constructor_instruction(2, DIV_I, NULL);
-    instruction_t *instruction4 = constructor_instruction(3, RETURN, NULL);
+    struct instruction *instruction1 = constructor_instruction(0, CONST, args1);
+    struct instruction *instruction2 = constructor_instruction(1, CONST, args2);
+    struct instruction *instruction3 = constructor_instruction(2, DIV_I, NULL);
+    struct instruction *instruction4 = constructor_instruction(3, RETURN, NULL);
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * 4);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * 4);
     instructions[0] = instruction1;
     instructions[1] = instruction2;
     instructions[2] = instruction3;
@@ -25,19 +25,19 @@ frame_t *create_test_frame_div_i() {
 
     char *frame_name = malloc(sizeof(char) * 5);
     strcpy(frame_name, "main");
-    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4);
+    struct frame *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-test_result_t test_kernel_div_i() {
+enum test_result test_kernel_div_i() {
     init_stack_frame();
 
-    frame_t *frame = create_test_frame_div_i();
+    struct frame *frame = create_test_frame_div_i();
     execute_frame(frame);
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 3 &&
@@ -55,18 +55,18 @@ test_result_t test_kernel_div_i() {
      */
 }
 
-frame_t *create_test_frame_add() {
-    long long *args1 = malloc(sizeof(long long));
+struct frame *create_test_frame_add() {
+    int64_t *args1 = malloc(sizeof(int64_t));
     args1[0] = 12;
-    long long *args2 = malloc(sizeof(long long));
+    int64_t *args2 = malloc(sizeof(int64_t));
     args2[0] = 4;
 
-    instruction_t *instruction1 = constructor_instruction(0, CONST, args1);
-    instruction_t *instruction2 = constructor_instruction(1, CONST, args2);
-    instruction_t *instruction3 = constructor_instruction(2, ADD, NULL);
-    instruction_t *instruction4 = constructor_instruction(3, RETURN, NULL);
+    struct instruction *instruction1 = constructor_instruction(0, CONST, args1);
+    struct instruction *instruction2 = constructor_instruction(1, CONST, args2);
+    struct instruction *instruction3 = constructor_instruction(2, ADD, NULL);
+    struct instruction *instruction4 = constructor_instruction(3, RETURN, NULL);
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * 4);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * 4);
     instructions[0] = instruction1;
     instructions[1] = instruction2;
     instructions[2] = instruction3;
@@ -74,19 +74,19 @@ frame_t *create_test_frame_add() {
 
     char *frame_name = malloc(sizeof(char) * 5);
     strcpy(frame_name, "main");
-    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4);
+    struct frame *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-test_result_t test_kernel_add() {
+enum test_result test_kernel_add() {
     init_stack_frame();
 
-    frame_t *frame = create_test_frame_add();
+    struct frame *frame = create_test_frame_add();
     execute_frame(frame);
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 16) {
@@ -103,18 +103,18 @@ test_result_t test_kernel_add() {
      */
 }
 
-frame_t *create_test_frame_mul() {
-    long long *args1 = malloc(sizeof(long long));
+struct frame *create_test_frame_mul() {
+    int64_t *args1 = malloc(sizeof(int64_t));
     args1[0] = 4;
-    long long *args2 = malloc(sizeof(long long));
+    int64_t *args2 = malloc(sizeof(int64_t));
     args2[0] = 5;
 
-    instruction_t *instruction1 = constructor_instruction(0, CONST, args1);
-    instruction_t *instruction2 = constructor_instruction(1, CONST, args2);
-    instruction_t *instruction3 = constructor_instruction(2, MUL, NULL);
-    instruction_t *instruction4 = constructor_instruction(3, RETURN, NULL);
+    struct instruction *instruction1 = constructor_instruction(0, CONST, args1);
+    struct instruction *instruction2 = constructor_instruction(1, CONST, args2);
+    struct instruction *instruction3 = constructor_instruction(2, MUL, NULL);
+    struct instruction *instruction4 = constructor_instruction(3, RETURN, NULL);
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * 4);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * 4);
     instructions[0] = instruction1;
     instructions[1] = instruction2;
     instructions[2] = instruction3;
@@ -122,19 +122,19 @@ frame_t *create_test_frame_mul() {
 
     char *frame_name = malloc(sizeof(char) * 5);
     strcpy(frame_name, "main");
-    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4);
+    struct frame *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-test_result_t test_kernel_mul() {
+enum test_result test_kernel_mul() {
     init_stack_frame();
 
-    frame_t *frame = create_test_frame_mul();
+    struct frame *frame = create_test_frame_mul();
     execute_frame(frame);
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 20) {
@@ -151,18 +151,18 @@ test_result_t test_kernel_mul() {
      */
 }
 
-frame_t *create_test_frame_compare_1() {
-    long long *args1 = malloc(sizeof(long long));
+struct frame *create_test_frame_compare_1() {
+    int64_t *args1 = malloc(sizeof(int64_t));
     args1[0] = 7;
-    long long *args2 = malloc(sizeof(long long));
+    int64_t *args2 = malloc(sizeof(int64_t));
     args2[0] = 7;
 
-    instruction_t *instruction1 = constructor_instruction(0, CONST, args1);
-    instruction_t *instruction2 = constructor_instruction(1, CONST, args2);
-    instruction_t *instruction3 = constructor_instruction(2, COMPARE, NULL);
-    instruction_t *instruction4 = constructor_instruction(3, RETURN, NULL);
+    struct instruction *instruction1 = constructor_instruction(0, CONST, args1);
+    struct instruction *instruction2 = constructor_instruction(1, CONST, args2);
+    struct instruction *instruction3 = constructor_instruction(2, COMPARE, NULL);
+    struct instruction *instruction4 = constructor_instruction(3, RETURN, NULL);
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * 4);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * 4);
     instructions[0] = instruction1;
     instructions[1] = instruction2;
     instructions[2] = instruction3;
@@ -170,19 +170,19 @@ frame_t *create_test_frame_compare_1() {
 
     char *frame_name = malloc(sizeof(char) * 5);
     strcpy(frame_name, "main");
-    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4);
+    struct frame *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-test_result_t test_kernel_compare_1() {
+enum test_result test_kernel_compare_1() {
     init_stack_frame();
 
-    frame_t *frame = create_test_frame_compare_1();
+    struct frame *frame = create_test_frame_compare_1();
     execute_frame(frame);
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 0) {
@@ -199,18 +199,18 @@ test_result_t test_kernel_compare_1() {
      */
 }
 
-frame_t *create_test_frame_compare_2() {
-    long long *args1 = malloc(sizeof(long long));
+struct frame *create_test_frame_compare_2() {
+    int64_t *args1 = malloc(sizeof(int64_t));
     args1[0] = 7;
-    long long *args2 = malloc(sizeof(long long));
+    int64_t *args2 = malloc(sizeof(int64_t));
     args2[0] = 14;
 
-    instruction_t *instruction1 = constructor_instruction(0, CONST, args1);
-    instruction_t *instruction2 = constructor_instruction(1, CONST, args2);
-    instruction_t *instruction3 = constructor_instruction(2, COMPARE, NULL);
-    instruction_t *instruction4 = constructor_instruction(3, RETURN, NULL);
+    struct instruction *instruction1 = constructor_instruction(0, CONST, args1);
+    struct instruction *instruction2 = constructor_instruction(1, CONST, args2);
+    struct instruction *instruction3 = constructor_instruction(2, COMPARE, NULL);
+    struct instruction *instruction4 = constructor_instruction(3, RETURN, NULL);
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * 4);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * 4);
     instructions[0] = instruction1;
     instructions[1] = instruction2;
     instructions[2] = instruction3;
@@ -218,19 +218,19 @@ frame_t *create_test_frame_compare_2() {
 
     char *frame_name = malloc(sizeof(char) * 5);
     strcpy(frame_name, "main");
-    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4);
+    struct frame *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 4, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-test_result_t test_kernel_compare_2() {
+enum test_result test_kernel_compare_2() {
     init_stack_frame();
 
-    frame_t *frame = create_test_frame_compare_2();
+    struct frame *frame = create_test_frame_compare_2();
     execute_frame(frame);
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 7) {
@@ -247,18 +247,18 @@ test_result_t test_kernel_compare_2() {
      */
 }
 
-frame_t *create_test_frame_invoke() {
-    long long *args1 = malloc(sizeof(long long));
+struct frame *create_test_frame_invoke() {
+    int64_t *args1 = malloc(sizeof(int64_t));
     args1[0] = 14;
     char *args2 = malloc(strlen("a") + 1);
     strcpy(args2, "a");
 
-    instruction_t *instruction1 = constructor_instruction(0, CONST, args1);
-    instruction_t *instruction2 = constructor_instruction(1, INVOKE, (long long *) args2);
-    instruction_t *instruction3 = constructor_instruction(2, ADD, NULL);
-    instruction_t *instruction4 = constructor_instruction(3, RETURN, NULL);
+    struct instruction *instruction1 = constructor_instruction(0, CONST, args1);
+    struct instruction *instruction2 = constructor_instruction(1, INVOKE, (int64_t *) args2);
+    struct instruction *instruction3 = constructor_instruction(2, ADD, NULL);
+    struct instruction *instruction4 = constructor_instruction(3, RETURN, NULL);
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * 4);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * 4);
     instructions[0] = instruction1;
     instructions[1] = instruction2;
     instructions[2] = instruction3;
@@ -266,42 +266,42 @@ frame_t *create_test_frame_invoke() {
 
     char *frame_name = malloc(sizeof(char) * 5);
     strcpy(frame_name, "main");
-    frame_t *frame = constructor_frame(1, frame_name, VOID_RETURN, instructions, 4);
+    struct frame *frame = constructor_frame(1, frame_name, VOID_RETURN, instructions, 4, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-frame_t *create_test_frame_invoked() {
-    long long *args1 = malloc(sizeof(long long));
+struct frame *create_test_frame_invoked() {
+    int64_t *args1 = malloc(sizeof(int64_t));
     args1[0] = 7;
 
-    instruction_t *instruction1 = constructor_instruction(0, CONST, args1);
-    instruction_t *instruction4 = constructor_instruction(1, I_RETURN, NULL);
+    struct instruction *instruction1 = constructor_instruction(0, CONST, args1);
+    struct instruction *instruction4 = constructor_instruction(1, I_RETURN, NULL);
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * 2);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * 2);
     instructions[0] = instruction1;
     instructions[1] = instruction4;
 
     char *frame_name = malloc(sizeof(char) * 2);
     strcpy(frame_name, "a");
-    frame_t *frame = constructor_frame(0, frame_name, INT_RETURN, instructions, 2);
+    struct frame *frame = constructor_frame(0, frame_name, INT_RETURN, instructions, 2, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-test_result_t test_kernel_invoke() {
+enum test_result test_kernel_invoke() {
     init_stack_frame();
 
     create_test_frame_invoked();
-    frame_t *frame = create_test_frame_invoke();
+    struct frame *frame = create_test_frame_invoke();
     execute_frame(frame);
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 21) {
@@ -325,55 +325,55 @@ test_result_t test_kernel_invoke() {
 void create_test_class() {
     char *class_name = malloc(sizeof(char) * 5);
     strcpy(class_name, "Main");
-    class_t *class = constructor_class(0, class_name, 2);
+    struct class *class = constructor_class(0, class_name, 2);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->classes[stack_frame->number_classes++] = class;
 
 }
 
-frame_t *create_test_frame_class() {
+struct frame *create_test_frame_class() {
     char *index_class_1 = malloc(strlen("Main") + 1);
     strcpy(index_class_1, "Main");
 
-    long long *index_class_1_local_pool = malloc(sizeof(long long));
+    int64_t *index_class_1_local_pool = malloc(sizeof(int64_t));
     index_class_1_local_pool[0] = 0;
-    long long *index_class_1_local_pool_1 = malloc(sizeof(long long));
+    int64_t *index_class_1_local_pool_1 = malloc(sizeof(int64_t));
     index_class_1_local_pool_1[0] = 0;
-    long long *index_class_1_local_pool_2 = malloc(sizeof(long long));
+    int64_t *index_class_1_local_pool_2 = malloc(sizeof(int64_t));
     index_class_1_local_pool_2[0] = 0;
 
-    long long *number_field_class_1 = malloc(sizeof(long long));
+    int64_t *number_field_class_1 = malloc(sizeof(int64_t));
     number_field_class_1[0] = 0;
-    long long *number_field_class_1_1 = malloc(sizeof(long long));
+    int64_t *number_field_class_1_1 = malloc(sizeof(int64_t));
     number_field_class_1_1[0] = 0;
 
 
     char *index_class_2 = malloc(strlen("Main") + 1);
     strcpy(index_class_2, "Main");
 
-    long long *index_class_2_local_pool = malloc(sizeof(long long));
+    int64_t *index_class_2_local_pool = malloc(sizeof(int64_t));
     index_class_2_local_pool[0] = 1;
-    long long *index_class_2_local_pool_1 = malloc(sizeof(long long));
+    int64_t *index_class_2_local_pool_1 = malloc(sizeof(int64_t));
     index_class_2_local_pool_1[0] = 1;
-    long long *index_class_2_local_pool_2 = malloc(sizeof(long long));
+    int64_t *index_class_2_local_pool_2 = malloc(sizeof(int64_t));
     index_class_2_local_pool_2[0] = 1;
 
-    long long *number_field_class_2 = malloc(sizeof(long long));
+    int64_t *number_field_class_2 = malloc(sizeof(int64_t));
     number_field_class_2[0] = 0;
-    long long *number_field_class_2_1 = malloc(sizeof(long long));
+    int64_t *number_field_class_2_1 = malloc(sizeof(int64_t));
     number_field_class_2_1[0] = 0;
 
-    long long *const_value_1 = malloc(sizeof(long long));
+    int64_t *const_value_1 = malloc(sizeof(int64_t));
     const_value_1[0] = 9;
-    long long *const_value_2 = malloc(sizeof(long long));
+    int64_t *const_value_2 = malloc(sizeof(int64_t));
     const_value_2[0] = 19;
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * 16);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * 16);
 
-    instructions[0] = constructor_instruction(0, NEW, (long long *) index_class_1);
+    instructions[0] = constructor_instruction(0, NEW, (int64_t *) index_class_1);
     instructions[1] = constructor_instruction(1, STORE, index_class_1_local_pool);
-    instructions[2] = constructor_instruction(2, NEW, (long long *) index_class_2);
+    instructions[2] = constructor_instruction(2, NEW, (int64_t *) index_class_2);
     instructions[3] = constructor_instruction(3, STORE, index_class_2_local_pool);
 
     instructions[4] = constructor_instruction(4, CONST, const_value_1);
@@ -395,21 +395,21 @@ frame_t *create_test_frame_class() {
 
     char *frame_name = malloc(sizeof(char) * 5);
     strcpy(frame_name, "main");
-    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 16);
+    struct frame *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 16, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-test_result_t test_kernel_class() {
+enum test_result test_kernel_class() {
     init_stack_frame();
     init_gc();
 
     create_test_class();
-    frame_t *frame = create_test_frame_class();
+    struct frame *frame = create_test_frame_class();
     execute_frame(frame);
 
     if (frame->work_stack[frame->index_first_element_work_stack] == 28) {
@@ -443,39 +443,39 @@ test_result_t test_kernel_class() {
      */
 }
 
-frame_t *create_test_frame_gc(int number_object) {
+struct frame *create_test_frame_gc(int number_object) {
     int number_instructions = number_object + 1 + number_object / 2;
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * number_instructions);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * number_instructions);
     for (int i = 0; i < number_instructions - 1; ++i) {
         if (i % 3 == 1) {
             instructions[i] = constructor_instruction(i, POP, NULL);
         } else {
             char *index_class_1 = malloc(strlen("Main") + 1);
             strcpy(index_class_1, "Main");
-            instructions[i] = constructor_instruction(i, NEW, (long long int *) index_class_1);
+            instructions[i] = constructor_instruction(i, NEW, (int64_t *) index_class_1);
         }
     }
     instructions[number_instructions - 1] = constructor_instruction(number_instructions - 1, RETURN, NULL);
 
     char *frame_name = malloc(sizeof(char) * 5);
     strcpy(frame_name, "main");
-    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, number_instructions);
+    struct frame *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, number_instructions, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-test_result_t test_kernel_gc() {
+enum test_result test_kernel_gc() {
     init_stack_frame();
     init_gc();
 
     create_test_class();
     int number_object = 10;
-    frame_t *frame = create_test_frame_gc(number_object);
+    struct frame *frame = create_test_frame_gc(number_object);
     execute_frame(frame);
 
     if (get_gc()->number_objects == number_object - number_object / 2) {
@@ -495,32 +495,32 @@ test_result_t test_kernel_gc() {
      */
 }
 
-frame_t *create_test_frame_gc_tree_1() {
+struct frame *create_test_frame_gc_tree_1() {
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * 9);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * 9);
 
     char *index_class_1 = malloc(strlen("Main") + 1);
     strcpy(index_class_1, "Main");
     char *index_class_2 = malloc(strlen("Main") + 1);
     strcpy(index_class_2, "Main");
-    long long *index_field_1 = malloc(sizeof(long long));
+    int64_t *index_field_1 = malloc(sizeof(int64_t));
     index_field_1[0] = 0;
 
-    long long *index_local_pool_0_1 = malloc(sizeof(long long));
+    int64_t *index_local_pool_0_1 = malloc(sizeof(int64_t));
     index_local_pool_0_1[0] = 0;
-    long long *index_local_pool_0_2 = malloc(sizeof(long long));
+    int64_t *index_local_pool_0_2 = malloc(sizeof(int64_t));
     index_local_pool_0_2[0] = 0;
 
-    long long *index_local_pool_1_1 = malloc(sizeof(long long));
+    int64_t *index_local_pool_1_1 = malloc(sizeof(int64_t));
     index_local_pool_1_1[0] = 1;
-    long long *index_local_pool_1_2 = malloc(sizeof(long long));
+    int64_t *index_local_pool_1_2 = malloc(sizeof(int64_t));
     index_local_pool_1_2[0] = 1;
-    long long *index_local_pool_1_3 = malloc(sizeof(long long));
+    int64_t *index_local_pool_1_3 = malloc(sizeof(int64_t));
     index_local_pool_1_3[0] = 1;
 
-    instructions[0] = constructor_instruction(0, NEW, (long long *) index_class_1);
+    instructions[0] = constructor_instruction(0, NEW, (int64_t *) index_class_1);
     instructions[1] = constructor_instruction(1, STORE, index_local_pool_0_1);
-    instructions[2] = constructor_instruction(2, NEW, (long long *) index_class_2);
+    instructions[2] = constructor_instruction(2, NEW, (int64_t *) index_class_2);
     instructions[3] = constructor_instruction(3, STORE, index_local_pool_1_1);
     instructions[4] = constructor_instruction(4, LOAD, index_local_pool_1_2);
     instructions[5] = constructor_instruction(5, LOAD, index_local_pool_0_2);
@@ -530,21 +530,21 @@ frame_t *create_test_frame_gc_tree_1() {
 
     char *frame_name = malloc(sizeof(char) * 5);
     strcpy(frame_name, "main");
-    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 9);
+    struct frame *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 9, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-test_result_t test_kernel_gc_tree_1() {
+enum test_result test_kernel_gc_tree_1() {
     init_stack_frame();
     init_gc();
 
     create_test_class();
-    frame_t *frame = create_test_frame_gc_tree_1();
+    struct frame *frame = create_test_frame_gc_tree_1();
     execute_frame(frame);
 
     if (get_gc()->number_objects == 2) {
@@ -570,33 +570,33 @@ test_result_t test_kernel_gc_tree_1() {
      */
 }
 
-frame_t *create_test_frame_gc_tree_2() {
+struct frame *create_test_frame_gc_tree_2() {
 
-    instruction_t **instructions = malloc(sizeof(instruction_t *) * 9);
+    struct instruction **instructions = malloc(sizeof(struct instruction *) * 9);
 
     char *index_class_1 = malloc(strlen("Main") + 1);
     strcpy(index_class_1, "Main");
     char *index_class_2 = malloc(strlen("Main") + 1);
     strcpy(index_class_2, "Main");
-    long long *index_field_1 = malloc(sizeof(long long));
+    int64_t *index_field_1 = malloc(sizeof(int64_t));
     index_field_1[0] = 0;
 
-    long long *index_local_pool_0_1 = malloc(sizeof(long long));
+    int64_t *index_local_pool_0_1 = malloc(sizeof(int64_t));
     index_local_pool_0_1[0] = 0;
-    long long *index_local_pool_0_2 = malloc(sizeof(long long));
+    int64_t *index_local_pool_0_2 = malloc(sizeof(int64_t));
     index_local_pool_0_2[0] = 0;
-    long long *index_local_pool_0_3 = malloc(sizeof(long long));
+    int64_t *index_local_pool_0_3 = malloc(sizeof(int64_t));
     index_local_pool_0_3[0] = 0;
 
-    long long *index_local_pool_1_1 = malloc(sizeof(long long));
+    int64_t *index_local_pool_1_1 = malloc(sizeof(int64_t));
     index_local_pool_1_1[0] = 1;
-    long long *index_local_pool_1_2 = malloc(sizeof(long long));
+    int64_t *index_local_pool_1_2 = malloc(sizeof(int64_t));
     index_local_pool_1_2[0] = 1;
 
 
-    instructions[0] = constructor_instruction(0, NEW, (long long int *) index_class_1);
+    instructions[0] = constructor_instruction(0, NEW, (int64_t *) index_class_1);
     instructions[1] = constructor_instruction(1, STORE, index_local_pool_0_1);
-    instructions[2] = constructor_instruction(2, NEW, (long long int *) index_class_2);
+    instructions[2] = constructor_instruction(2, NEW, (int64_t *) index_class_2);
     instructions[3] = constructor_instruction(3, STORE, index_local_pool_1_1);
     instructions[4] = constructor_instruction(4, LOAD, index_local_pool_1_2);
     instructions[5] = constructor_instruction(5, LOAD, index_local_pool_0_2);
@@ -606,21 +606,21 @@ frame_t *create_test_frame_gc_tree_2() {
 
     char *frame_name = malloc(sizeof(char) * 5);
     strcpy(frame_name, "main");
-    frame_t *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 9);
+    struct frame *frame = constructor_frame(0, frame_name, VOID_RETURN, instructions, 9, 0);
 
-    stack_frame_t *stack_frame = get_stack_frame();
+    struct stack_frame *stack_frame = get_stack_frame();
     stack_frame->stack_frame[++stack_frame->index_first_element_stack_frame] = frame;
     stack_frame->frames[stack_frame->number_frames++] = frame;
 
     return frame;
 }
 
-test_result_t test_kernel_gc_tree_2() {
+enum test_result test_kernel_gc_tree_2() {
     init_stack_frame();
     init_gc();
 
     create_test_class();
-    frame_t *frame = create_test_frame_gc_tree_2();
+    struct frame *frame = create_test_frame_gc_tree_2();
     execute_frame(frame);
 
     if (get_gc()->number_objects == 1) {
@@ -648,12 +648,12 @@ test_result_t test_kernel_gc_tree_2() {
 
 int main() {
     char *end;
-    long long l = strtoll("10", &end, 10);
+    int64_t l = strtoll("10", &end, 10);
     puts(end);
-    printf("%lli", l);
+    printf("%li", l);
 
     int number_test_functions = 10;
-    test_result_t(*test_functions[number_test_functions])();
+    enum test_result(*test_functions[number_test_functions])();
     test_functions[0] = test_kernel_div_i;
     test_functions[1] = test_kernel_add;
     test_functions[2] = test_kernel_mul;

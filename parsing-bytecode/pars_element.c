@@ -7,7 +7,7 @@
 #include "pars_element.h"
 #include "string.h"
 
-void destructor_pars_element(pars_element_t *pars_element, size_t number_elements) {
+void destructor_pars_element(struct pars_element *pars_element, size_t number_elements) {
     for (int j = 0; j < number_elements; ++j) {
         for (int i = 0; i < pars_element[j].number_pre_args; ++i) {
             free(pars_element[j].pre_args[i].name_arg);
@@ -36,7 +36,7 @@ void destructor_pars_element(pars_element_t *pars_element, size_t number_element
     free(pars_element);
 }
 
-void set_values_arg(arg_t *arg, size_t number_values, char **values) {
+void set_values_arg(struct arg *arg, size_t number_values, char **values) {
     arg->number_values = number_values;
     arg->values_arg = malloc(8 * number_values);
     for (int j = 0; j < number_values; ++j) {
@@ -45,10 +45,10 @@ void set_values_arg(arg_t *arg, size_t number_values, char **values) {
     }
 }
 
-arg_t *pars_function_pre_args(char *text, size_t *number_args) {
+struct arg *pars_function_pre_args(char *text, size_t *number_args) {
     char **split_string = split(text, " ", number_args);
 
-    arg_t *args = malloc(sizeof(arg_t) * (*number_args));
+    struct arg *args = malloc(sizeof(struct arg) * (*number_args));
 
     args[0].name_arg = malloc(strlen("type_frame") + 1);
     strcpy(args[0].name_arg, "type_frame");
@@ -72,10 +72,10 @@ arg_t *pars_function_pre_args(char *text, size_t *number_args) {
     return args;
 }
 
-arg_t *pars_function_args(char *text, size_t *number_args) {
+struct arg *pars_function_args(char *text, size_t *number_args) {
     char **split_args = split(text, "\n", number_args);
 
-    arg_t *args = malloc(sizeof(arg_t) * (*number_args));
+    struct arg *args = malloc(sizeof(struct arg) * (*number_args));
     for (int i = 0; i < *number_args; ++i) {
         unsigned long remove_number_args_size;
         char **remove_number_args = split(split_args[i], ":", &remove_number_args_size);
@@ -100,9 +100,9 @@ arg_t *pars_function_args(char *text, size_t *number_args) {
     return args;
 }
 
-arg_t *pars_class_pre_args(char *text, size_t *number_args) {
+struct arg *pars_class_pre_args(char *text, size_t *number_args) {
     *number_args = 1;
-    arg_t *args = malloc(sizeof(arg_t));
+    struct arg *args = malloc(sizeof(struct arg));
 
     args[0].name_arg = malloc(strlen("name") + 1);
     strcpy(args[0].name_arg, "name");
@@ -112,10 +112,10 @@ arg_t *pars_class_pre_args(char *text, size_t *number_args) {
     return args;
 }
 
-arg_t *pars_class_args(char *text, size_t *number_args) {
+struct arg *pars_class_args(char *text, size_t *number_args) {
     char **split_args = split(text, "\n", number_args);
 
-    arg_t *args = malloc(sizeof(arg_t) * (*number_args));
+    struct arg *args = malloc(sizeof(struct arg) * (*number_args));
     for (int i = 0; i < *number_args; ++i) {
         unsigned long size;
         char **split_arg = split(split_args[i], "=", &size);
@@ -133,10 +133,10 @@ arg_t *pars_class_args(char *text, size_t *number_args) {
     return args;
 }
 
-pars_element_t *pars_text(char *text, size_t *number_elements) {
+struct pars_element *pars_text(char *text, size_t *number_elements) {
     char **split_text = split(text, "}", number_elements);
 
-    pars_element_t *pars_elements = malloc(sizeof(pars_element_t) * (*number_elements));
+    struct pars_element *pars_elements = malloc(sizeof(struct pars_element) * (*number_elements));
 
     for (int i = 0; i < *number_elements; ++i) {
         size_t number_pre_args = 0;

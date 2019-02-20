@@ -11,24 +11,24 @@
 #include "../kernel/class.h"
 #include "../kernel/stack_frame.h"
 
-void load_class(pars_element_t pars_element) {
+void load_class(struct pars_element pars_element) {
     static int count_frames = 0;
 
     char *class_name = malloc(strlen(pars_element.pre_args[0].values_arg[0]) + 1);
     strcpy(class_name, pars_element.pre_args[0].values_arg[0]);
 
-    class_t *class = constructor_class(count_frames++, class_name,
-                                       strtoll(pars_element.args[0].values_arg[0], NULL, 10));
+    struct class *class = constructor_class(count_frames++, class_name,
+                                            (int) strtol(pars_element.args[0].values_arg[0], NULL, 10));
 
     get_stack_frame()->classes[get_stack_frame()->number_classes++] = class;
 }
 
-void load_frame(pars_element_t pars_element) {
+void load_frame(struct pars_element pars_element) {
     static int count_frames = 0;
 
-    instruction_t **instructions = malloc(8 * pars_element.number_args);
+    struct instruction **instructions = malloc(8 * pars_element.number_args);
 
-    type_instruction_t type_instruction;
+    enum type_instruction type_instruction;
     for (int i = 0; i < pars_element.number_args; ++i) {
         if (!strcmp(pars_element.args[i].name_arg, "add")) {
             type_instruction = ADD;
@@ -90,7 +90,7 @@ void load_frame(pars_element_t pars_element) {
     }
 
 
-    type_frame_t type_frame;
+    enum type_frame type_frame;
     if (pars_element.pre_args[0].values_arg[0][0] == 'v') {
         type_frame = VOID_RETURN;
     } else if (pars_element.pre_args[0].values_arg[0][0] == 'o') {
@@ -110,7 +110,7 @@ void load_frame(pars_element_t pars_element) {
         number_args = (int) strtol(pars_element.pre_args[2].values_arg[0], NULL, 10);
     }
 
-    frame_t *frame = constructor_frame(count_frames++, frame_name, type_frame, instructions,
+    struct frame *frame = constructor_frame(count_frames++, frame_name, type_frame, instructions,
                                        (int) pars_element.number_args, number_args);
 
     get_stack_frame()->frames[get_stack_frame()->number_frames++] = frame;
@@ -120,7 +120,7 @@ void load_class_and_frame(char *file_name) {
     char *text = read_file(file_name);
 
     size_t number_elements;
-    pars_element_t *pars_elements = pars_text(text, &number_elements);
+    struct pars_element *pars_elements = pars_text(text, &number_elements);
 
     for (int i = 0; i < number_elements; ++i) {
         switch (pars_elements[i].type_parse_element) {

@@ -6,7 +6,6 @@
 
 #define VM_INSTRUCTION_H
 
-typedef enum type_instruction type_instruction_t;
 enum type_instruction {
     ADD,
     DIV_I,
@@ -35,19 +34,18 @@ enum type_instruction {
     O_RETURN
 };
 
-typedef struct instruction instruction_t;
 struct instruction {
     int index_instruction;
 
-    type_instruction_t type_instruction;
+    enum type_instruction type_instruction;
 
     int64_t *args;
 };
 
-int *execute_instruction(instruction_t instruction);
+int *execute_instruction(struct instruction instruction);
 
-instruction_t *constructor_instruction(int index, type_instruction_t type, int64_t *args);
+struct instruction *constructor_instruction(int index, enum type_instruction type, int64_t *args);
 
-void destructor_instruction(instruction_t *instruction);
+void destructor_instruction(struct instruction *instruction);
 
 #endif //VM_INSTRUCTION_H

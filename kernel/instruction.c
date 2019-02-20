@@ -5,8 +5,8 @@
 #include "gc.h"
 
 
-instruction_t *constructor_instruction(int index, type_instruction_t type, int64_t *args) {
-    instruction_t *instruction = malloc(sizeof(instruction_t));
+struct instruction *constructor_instruction(int index, enum type_instruction type, int64_t *args) {
+    struct instruction *instruction = malloc(sizeof(struct instruction));
 
     instruction->index_instruction = index;
     instruction->type_instruction = type;
@@ -15,12 +15,12 @@ instruction_t *constructor_instruction(int index, type_instruction_t type, int64
     return instruction;
 }
 
-void destructor_instruction(instruction_t *instruction) {
+void destructor_instruction(struct instruction *instruction) {
     free(instruction->args);
     free(instruction);
 }
 
-void print_name_instruction(instruction_t instruction) {
+void print_name_instruction(struct instruction instruction) {
     switch (instruction.type_instruction) {
         case ADD:
             printf("add");
@@ -82,7 +82,7 @@ void print_name_instruction(instruction_t instruction) {
     }
 }
 
-void add(frame_t *frame, int64_t **work_stack, bool **is_object) {
+void add(struct frame *frame, int64_t **work_stack, bool **is_object) {
 
     long long first_element = (*work_stack)[frame->index_first_element_work_stack];
     int64_t second_element = (*work_stack)[--frame->index_first_element_work_stack];
@@ -91,7 +91,7 @@ void add(frame_t *frame, int64_t **work_stack, bool **is_object) {
     (*is_object)[frame->index_first_element_work_stack] = false;
 }
 
-void div_i(frame_t *frame, int64_t **work_stack, bool **is_object) {
+void div_i(struct frame *frame, int64_t **work_stack, bool **is_object) {
     int64_t first_element = (*work_stack)[frame->index_first_element_work_stack];
     int64_t second_element = (*work_stack)[frame->index_first_element_work_stack - 1];
 
@@ -102,7 +102,7 @@ void div_i(frame_t *frame, int64_t **work_stack, bool **is_object) {
     (*is_object)[frame->index_first_element_work_stack - 1] = false;
 }
 
-void mul(frame_t *frame, int64_t **work_stack, bool **is_object) {
+void mul(struct frame *frame, int64_t **work_stack, bool **is_object) {
     int64_t first_element = (*work_stack)[frame->index_first_element_work_stack];
     int64_t second_element = (*work_stack)[--frame->index_first_element_work_stack];
 
@@ -110,16 +110,16 @@ void mul(frame_t *frame, int64_t **work_stack, bool **is_object) {
     (*is_object)[frame->index_first_element_work_stack] = false;
 }
 
-void compare(frame_t *frame, int64_t **work_stack, bool **is_object) {
+void compare(struct frame *frame, int64_t **work_stack, bool **is_object) {
     (*work_stack)[frame->index_first_element_work_stack - 1] = (*work_stack)[frame->index_first_element_work_stack] -
                                                                (*work_stack)[frame->index_first_element_work_stack - 1];
     (*is_object)[frame->index_first_element_work_stack - 1] = false;
     frame->index_first_element_work_stack--;
 }
 
-void invoke(frame_t *frame, stack_frame_t *stack_frame, instruction_t instruction, int64_t **work_stack,
+void invoke(struct frame *frame, struct stack_frame *stack_frame, struct instruction instruction, int64_t **work_stack,
             bool **is_object) {
-    frame_t *new_frame = find_frame((char *) instruction.args);
+    struct frame *new_frame = find_frame((char *) instruction.args);
     for (int i = 0; i < new_frame->number_args; ++i) {
         int64_t element = (*work_stack)[frame->index_first_element_work_stack];
         new_frame->local_pool[i] = element;
@@ -134,39 +134,39 @@ void invoke(frame_t *frame, stack_frame_t *stack_frame, instruction_t instructio
     execute_frame(stack_frame->stack_frame[stack_frame->index_first_element_stack_frame]);
 }
 
-void get_field(int64_t **work_stack, frame_t *frame, int number_field, bool **is_object) {
-    object_t *object = (object_t *) (*work_stack)[frame->index_first_element_work_stack];
+void get_field(int64_t **work_stack, struct frame *frame, int number_field, bool **is_object) {
+    struct object *object = (struct object *) (*work_stack)[frame->index_first_element_work_stack];
     (*work_stack)[frame->index_first_element_work_stack] = object->fields[number_field];
     (*is_object)[frame->index_first_element_work_stack] = object->is_field_object[number_field];
 }
 
-void set_field(int64_t **work_stack, frame_t *frame, int number_field, bool **is_object) {
-    object_t *object = (object_t *) (*work_stack)[frame->index_first_element_work_stack];
+void set_field(int64_t **work_stack, struct frame *frame, int number_field, bool **is_object) {
+    struct object *object = (struct object *) (*work_stack)[frame->index_first_element_work_stack];
     int64_t value = (*work_stack)[frame->index_first_element_work_stack - 1];
     object->fields[number_field] = value;
     object->is_field_object[number_field] = (*is_object)[frame->index_first_element_work_stack - 1];
     frame->index_first_element_work_stack -= 2;
 }
 
-void ireturn(stack_frame_t *stack_frame, int64_t **work_stack) {
+void ireturn(struct stack_frame *stack_frame, int64_t **work_stack) {
     stack_frame->index_first_element_stack_frame--;
 
     int64_t value = **work_stack;
-    frame_t *old_frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
+    struct frame *old_frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
     old_frame->work_stack[++old_frame->index_first_element_work_stack] = value;
     old_frame->is_work_stack_element_object[old_frame->index_first_element_work_stack] = false;
 }
 
-void oreturn(stack_frame_t *stack_frame, int64_t **work_stack) {
+void oreturn(struct stack_frame *stack_frame, int64_t **work_stack) {
     stack_frame->index_first_element_stack_frame--;
 
     int64_t value = **work_stack;
-    frame_t *old_frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
+    struct frame *old_frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
     old_frame->work_stack[++old_frame->index_first_element_work_stack] = value;
     old_frame->is_work_stack_element_object[old_frame->index_first_element_work_stack] = true;
 }
 
-void print_work_stack(frame_t *frame) {
+void print_work_stack(struct frame *frame) {
     printf("Work stack(size = %i): ", frame->index_first_element_work_stack + 1);
     for (int i = frame->index_first_element_work_stack; i >= 0; --i) {
         if (frame->is_work_stack_element_object[i]) {
@@ -178,7 +178,7 @@ void print_work_stack(frame_t *frame) {
     printf("\n");
 }
 
-void print_local_pool(frame_t *frame) {
+void print_local_pool(struct frame *frame) {
     printf("Local pool(first %i elements): ", DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT);
     for (int i = 0; i < DEBUG_NUMBER_ELEMENT_LOCAL_POOL_PRINT; ++i) {
         if (frame->is_local_pool_element_object[i]) {
@@ -190,13 +190,13 @@ void print_local_pool(frame_t *frame) {
     printf("\n");
 }
 
-void new(frame_t *frame, instruction_t instruction, int64_t **work_stack, bool **is_work_stack_element_object) {
+void new(struct frame *frame, struct instruction instruction, int64_t **work_stack, bool **is_work_stack_element_object) {
     uint64_t object = new_object(find_class((char *) instruction.args));
     (*work_stack)[++frame->index_first_element_work_stack] = object;
     (*is_work_stack_element_object)[frame->index_first_element_work_stack] = true;
 }
 
-bool if_acmpeq(frame_t *frame, int64_t **work_stack) {
+bool if_acmpeq(struct frame *frame, int64_t **work_stack) {
     int64_t first_element = (*work_stack)[frame->index_first_element_work_stack];
     int64_t second_element = (*work_stack)[frame->index_first_element_work_stack - 1];
 
@@ -209,9 +209,9 @@ bool if_acmpeq(frame_t *frame, int64_t **work_stack) {
     }
 }
 
-int *execute_instruction(instruction_t instruction) {
-    stack_frame_t *stack_frame = get_stack_frame();
-    frame_t *frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
+int *execute_instruction(struct instruction instruction) {
+    struct stack_frame *stack_frame = get_stack_frame();
+    struct frame *frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
     int64_t **local_pool = &frame->local_pool;
     int64_t **work_stack = &frame->work_stack;
     bool **is_work_stack_element_object = &frame->is_work_stack_element_object;

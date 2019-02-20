@@ -5,9 +5,9 @@
 #include "gc.h"
 #include "stack_frame.h"
 
-gc_t *gc = NULL;
+struct gc *gc = NULL;
 
-gc_t *get_gc(){
+struct gc *get_gc(){
     return gc;
 }
 
@@ -23,14 +23,14 @@ void init_gc() {
     if (gc != NULL) {
         destructor_gc();
     }
-    gc = malloc(sizeof(gc_t));
+    gc = malloc(sizeof(struct gc));
 
     gc->objects = NULL;
     gc->number_objects = 0;
     gc->heap_size = 0;
 }
 
-int get_index_object(object_t *object){
+int get_index_object(struct object *object){
     for (int i = 0; i < gc->number_objects; ++i) {
         if(object == gc->objects[i]){
             return i;
@@ -40,32 +40,32 @@ int get_index_object(object_t *object){
 }
 
 void mark_root(bool *mark) {
-    frame_t **frames = get_stack_frame()->frames;
+    struct frame **frames = get_stack_frame()->frames;
     int number_frames = get_stack_frame()->number_frames;
 
     for (int i = 0; i < number_frames; ++i) {
-        frame_t *frame = frames[i];
+        struct frame *frame = frames[i];
         for (int j = 0; j <= frame->index_first_element_work_stack; ++j) {
             if (frame->is_work_stack_element_object[j]) {
-                int index = get_index_object((object_t *)frame->work_stack[j]);
+                int index = get_index_object((struct object *)frame->work_stack[j]);
                 mark[index] = true;
             }
         }
 
         for (int j = 0; j < LOCAL_POOL_SIZE_MAX; ++j) {
             if (frame->is_local_pool_element_object[j]) {
-                int index = get_index_object((object_t *)frame->local_pool[j]);
+                int index = get_index_object((struct object *)frame->local_pool[j]);
                 mark[index] = true;
             }
         }
     }
 }
 
-void mark_object_tree(bool *mark, object_t *object) {
+void mark_object_tree(bool *mark, struct object *object) {
     mark[get_index_object(object)] = true;
     for (int j = 0; j < object->class->number_fields; ++j) {
         if (object->is_field_object[j]) {
-            object_t *embedded = (object_t *) object->fields[j];
+            struct object *embedded = (struct object *) object->fields[j];
             if (!mark[get_index_object(embedded)]) {
                 mark_object_tree(mark, embedded);
             }
@@ -79,7 +79,7 @@ void mark_tree(bool *mark) {
 
     for (int i = 0; i < gc->number_objects; ++i) {
         if (copy_mark[i]) {
-            object_t *object = gc->objects[i];
+            struct object *object = gc->objects[i];
             mark_object_tree(mark, object);
         }
     }
@@ -114,7 +114,7 @@ bool *mark() {
 void sweep(const bool *mark) {
     for (int i = 0; i < gc->number_objects; ++i) {
         if (!mark[i]) {
-            gc->heap_size -= sizeof(object_t) + sizeof(int64_t) * gc->objects[i]->class->number_fields;
+            gc->heap_size -= sizeof(struct object) + sizeof(int64_t) * gc->objects[i]->class->number_fields;
 
             destructor_object(gc->objects[i]);
             gc->objects[i] = NULL;
@@ -158,8 +158,8 @@ void start_gc() {
     free(mark_result);
 }
 
-bool check_gc(class_t *class) {
-    uint64_t size_object = sizeof(object_t) + sizeof(int64_t) * class->number_fields;
+bool check_gc(struct class *class) {
+    uint64_t size_object = sizeof(struct object) + sizeof(int64_t) * class->number_fields;
 
     if (true) {
         start_gc();
@@ -177,12 +177,12 @@ bool check_gc(class_t *class) {
     return true;
 }
 
-uint64_t new_object(class_t *class) {
+uint64_t new_object(struct class *class) {
     if (check_gc(class)) {
         gc->objects = realloc(gc->objects, (size_t) ((gc->number_objects + 1) * 8));
-        gc->heap_size += sizeof(object_t) + sizeof(int64_t) * class->number_fields;
+        gc->heap_size += sizeof(struct object) + sizeof(int64_t) * class->number_fields;
 
-        object_t *object = constructor_object(class);
+        struct object *object = constructor_object(class);
 
         gc->objects[gc->number_objects++] = object;
 

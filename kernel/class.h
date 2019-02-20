@@ -8,7 +8,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct class class_t;
 struct class {
     int index_class;
     char *name;
@@ -16,21 +15,20 @@ struct class {
     int number_fields;
 };
 
-typedef struct object object_t;
 struct object {
-    class_t *class;
+    struct class *class;
 
     int64_t *fields;
 
     bool *is_field_object;
 };
 
-class_t *constructor_class(int index_class, char *class_name, int number_field);
+struct class *constructor_class(int index_class, char *class_name, int number_field);
 
-void destructor_class(class_t *class);
+void destructor_class(struct class *class);
 
-object_t *constructor_object(class_t *class);
+struct object *constructor_object(struct class *class);
 
-void destructor_object(object_t *object);
+void destructor_object(struct object *object);
 
 #endif //VIRTUALMACHINE_CLASS_H
