@@ -21,7 +21,7 @@ void destructor_gc();
 
 void start_gc();
 
-uint64_t new_object(struct class *class);
+var new_object(struct class *class);
 
 void init_gc();
 

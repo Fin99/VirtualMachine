@@ -7,6 +7,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "frame.h"
 
 struct class {
     int index_class;
@@ -18,7 +19,7 @@ struct class {
 struct object {
     struct class *class;
 
-    int64_t *fields;
+    var *fields;
 
     bool *is_field_object;
 };

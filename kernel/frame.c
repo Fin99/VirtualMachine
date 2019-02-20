@@ -9,11 +9,11 @@ struct frame *constructor_frame(int index_frame, char *name, enum type_frame typ
     frame->type_frame = type_frame;
     frame->number_args = number_args;
 
-    frame->work_stack = calloc(1, sizeof(int64_t) * WORK_STACK_SIZE_MAX);
+    frame->work_stack = calloc(1, sizeof(var) * WORK_STACK_SIZE_MAX);
     frame->index_first_element_work_stack = -1;
     frame->is_work_stack_element_object = calloc(1, sizeof(bool) * WORK_STACK_SIZE_MAX);
 
-    frame->local_pool = calloc(1, sizeof(int64_t) * LOCAL_POOL_SIZE_MAX);
+    frame->local_pool = calloc(1, sizeof(var) * LOCAL_POOL_SIZE_MAX);
     frame->is_local_pool_element_object = calloc(1, sizeof(bool) * LOCAL_POOL_SIZE_MAX);
 
     frame->instructions = instructions;

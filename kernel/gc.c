@@ -114,7 +114,7 @@ bool *mark() {
 void sweep(const bool *mark) {
     for (int i = 0; i < gc->number_objects; ++i) {
         if (!mark[i]) {
-            gc->heap_size -= sizeof(struct object) + sizeof(int64_t) * gc->objects[i]->class->number_fields;
+            gc->heap_size -= sizeof(struct object) + sizeof(var) * gc->objects[i]->class->number_fields;
 
             destructor_object(gc->objects[i]);
             gc->objects[i] = NULL;
@@ -159,7 +159,7 @@ void start_gc() {
 }
 
 bool check_gc(struct class *class) {
-    uint64_t size_object = sizeof(struct object) + sizeof(int64_t) * class->number_fields;
+    uint64_t size_object = sizeof(struct object) + sizeof(var) * class->number_fields;
 
     if (true) {
         start_gc();
@@ -177,10 +177,10 @@ bool check_gc(struct class *class) {
     return true;
 }
 
-uint64_t new_object(struct class *class) {
+var new_object(struct class *class) {
     if (check_gc(class)) {
         gc->objects = realloc(gc->objects, (size_t) ((gc->number_objects + 1) * 8));
-        gc->heap_size += sizeof(struct object) + sizeof(int64_t) * class->number_fields;
+        gc->heap_size += sizeof(struct object) + sizeof(var) * class->number_fields;
 
         struct object *object = constructor_object(class);
 
@@ -191,8 +191,8 @@ uint64_t new_object(struct class *class) {
             free(mark());
         }
 
-        return (uint64_t) object;
+        return (var) object;
     } else {
-        return (uint64_t) NULL; //error
+        return (var) NULL; //error
     }
 }

@@ -20,6 +20,8 @@ enum type_frame {
     OBJECT_RETURN
 };
 
+typedef int64_t var;
+
 struct frame {
     enum type_frame type_frame;
 
@@ -31,11 +33,11 @@ struct frame {
     struct instruction **instructions;
     int number_instructions;
 
-    int64_t *work_stack;
+    var *work_stack;
     int index_first_element_work_stack;
     bool *is_work_stack_element_object;
 
-    int64_t *local_pool;
+    var *local_pool;
     bool *is_local_pool_element_object;
 };
 

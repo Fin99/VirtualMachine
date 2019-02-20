@@ -22,7 +22,7 @@ void destructor_class(struct class *class) {
 
 struct object *constructor_object(struct class *class) {
     struct object *object = malloc(sizeof(struct object));
-    object->fields = malloc(sizeof(int64_t) * class->number_fields);
+    object->fields = malloc(sizeof(var) * class->number_fields);
     object->is_field_object= calloc(1, sizeof(bool) * class->number_fields);
     object->class = class;
     return object;

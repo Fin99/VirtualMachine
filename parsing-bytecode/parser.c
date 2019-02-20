@@ -73,10 +73,10 @@ void load_frame(struct pars_element pars_element) {
             //todo error
         }
 
-        int64_t *instruction_args = malloc(sizeof(int64_t) * pars_element.args[i].number_values);
+        var *instruction_args = malloc(sizeof(var) * pars_element.args[i].number_values);
         for (int j = 0; j < pars_element.args[i].number_values; ++j) {
             char *end;
-            int64_t arg = strtoll(pars_element.args[i].values_arg[j], &end, 10);
+            var arg = strtoll(pars_element.args[i].values_arg[j], &end, 10);
             if (!strcmp(end, "")) {
                 instruction_args[j] = arg;
             } else {

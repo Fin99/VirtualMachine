@@ -6,6 +6,8 @@
 
 #define VM_INSTRUCTION_H
 
+#include "frame.h"
+
 enum type_instruction {
     ADD,
     DIV_I,
@@ -34,17 +36,19 @@ enum type_instruction {
     O_RETURN
 };
 
+typedef int64_t var;
+
 struct instruction {
     int index_instruction;
 
     enum type_instruction type_instruction;
 
-    int64_t *args;
+    var *args;
 };
 
 int *execute_instruction(struct instruction instruction);
 
-struct instruction *constructor_instruction(int index, enum type_instruction type, int64_t *args);
+struct instruction *constructor_instruction(int index, enum type_instruction type, var *args);
 
 void destructor_instruction(struct instruction *instruction);
 
