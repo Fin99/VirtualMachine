@@ -36,19 +36,17 @@ enum type_instruction {
     O_RETURN
 };
 
-typedef int64_t var;
-
 struct instruction {
     int index_instruction;
 
     enum type_instruction type_instruction;
 
-    var *args;
+    void *args;
 };
 
 int *execute_instruction(struct instruction instruction);
 
-struct instruction *constructor_instruction(int index, enum type_instruction type, var *args);
+struct instruction *constructor_instruction(int index, enum type_instruction type, void *args);
 
 void destructor_instruction(struct instruction *instruction);
 

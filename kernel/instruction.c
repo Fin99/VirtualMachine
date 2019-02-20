@@ -5,7 +5,7 @@
 #include "gc.h"
 
 
-struct instruction *constructor_instruction(int index, enum type_instruction type, var *args) {
+struct instruction *constructor_instruction(int index, enum type_instruction type, void *args) {
     struct instruction *instruction = malloc(sizeof(struct instruction));
 
     instruction->index_instruction = index;
@@ -38,25 +38,25 @@ void print_name_instruction(struct instruction instruction) {
             printf("new %s", (char *) instruction.args);
             break;
         case GET_FIELD:
-            printf("get_field %li", instruction.args[0]);
+            printf("get_field %li", ((int64_t *) instruction.args)[0]);
             break;
         case SET_FIELD:
-            printf("set_field %li", instruction.args[0]);
+            printf("set_field %li", ((int64_t *) instruction.args)[0]);
             break;
         case LOAD:
-            printf("load %li", instruction.args[0]);
+            printf("load %li", ((int64_t *) instruction.args)[0]);
             break;
         case CONST:
-            printf("const %li", instruction.args[0]);
+            printf("const %li", ((int64_t *) instruction.args)[0]);
             break;
         case STORE:
-            printf("store %li", instruction.args[0]);
+            printf("store %li", ((int64_t *) instruction.args)[0]);
             break;
         case POP:
             printf("pop");
             break;
         case CLEAR_LOCAL_VARIABLE:
-            printf("clear_local_variable %li", instruction.args[0]);
+            printf("clear_local_variable %li", ((int64_t *) instruction.args)[0]);
             break;
         case INVOKE:
             printf("invoke %s", (char *) instruction.args);
@@ -71,13 +71,13 @@ void print_name_instruction(struct instruction instruction) {
             printf("o_return");
             break;
         case IF_ACMPEQ:
-            printf("if_acmpeq %li", instruction.args[0]);
+            printf("if_acmpeq %li", ((int64_t *) instruction.args)[0]);
             break;
         case IF_ACMPNE:
-            printf("if_acmpne %li", instruction.args[0]);
+            printf("if_acmpne %li", ((int64_t *) instruction.args)[0]);
             break;
         case GOTO:
-            printf("goto %li", instruction.args[0]);
+            printf("goto %li", ((int64_t *) instruction.args)[0]);
             break;
     }
 }
@@ -236,31 +236,31 @@ int *execute_instruction(struct instruction instruction) {
             new(frame, instruction, work_stack, is_work_stack_element_object);
             break;
         case GET_FIELD:
-            get_field(work_stack, frame, (int) *instruction.args, is_work_stack_element_object);
+            get_field(work_stack, frame, *(int *) instruction.args, is_work_stack_element_object);
             break;
         case SET_FIELD:
-            set_field(work_stack, frame, (int) *instruction.args, is_work_stack_element_object);
+            set_field(work_stack, frame, *(int *) instruction.args, is_work_stack_element_object);
             break;
         case LOAD:
-            (*work_stack)[++frame->index_first_element_work_stack] = (*local_pool)[*instruction.args];
+            (*work_stack)[++frame->index_first_element_work_stack] = (*local_pool)[*(int *) instruction.args];
             (*is_work_stack_element_object)[frame->index_first_element_work_stack] =
-                    (*is_local_pool_element_object)[*instruction.args];
+                    (*is_local_pool_element_object)[*(int *) instruction.args];
             break;
         case CONST:
-            (*work_stack)[++frame->index_first_element_work_stack] = *instruction.args;
+            (*work_stack)[++frame->index_first_element_work_stack] = *(var *) instruction.args;
             (*is_work_stack_element_object)[frame->index_first_element_work_stack] = false;
             break;
         case STORE:
-            (*local_pool)[*instruction.args] = (*work_stack)[frame->index_first_element_work_stack--];
-            (*is_local_pool_element_object)[*instruction.args] =
+            (*local_pool)[*(int *) instruction.args] = (*work_stack)[frame->index_first_element_work_stack--];
+            (*is_local_pool_element_object)[*(int *) instruction.args] =
                     (*is_work_stack_element_object)[frame->index_first_element_work_stack + 1];
             break;
         case POP:
             frame->index_first_element_work_stack--;
             break;
         case CLEAR_LOCAL_VARIABLE:
-            (*local_pool)[*instruction.args] = 0;
-            (*is_local_pool_element_object)[*instruction.args] = false;
+            (*local_pool)[*(int *) instruction.args] = 0;
+            (*is_local_pool_element_object)[*(int *) instruction.args] = false;
             break;
         case INVOKE:
             invoke(frame, stack_frame, instruction, work_stack, is_work_stack_element_object);
@@ -279,18 +279,18 @@ int *execute_instruction(struct instruction instruction) {
         case IF_ACMPEQ:
             if (if_acmpeq(frame, work_stack)) {
                 index_jump = malloc(8);
-                *index_jump = (int) *instruction.args;
+                *index_jump = *(int *) instruction.args;
             }
             break;
         case IF_ACMPNE:
             if (!if_acmpeq(frame, work_stack)) {
                 index_jump = malloc(8);
-                *index_jump = (int) *instruction.args;
+                *index_jump = *(int *) instruction.args;
             }
             break;
         case GOTO:
             index_jump = malloc(8);
-            *index_jump = (int) *instruction.args;
+            *index_jump = *(int *) instruction.args;
             break;
     }
 
