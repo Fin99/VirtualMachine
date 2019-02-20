@@ -176,7 +176,7 @@ int main() {
     name_test_functions[10] = "test_project_gc_tree_2():";
     name_test_functions[11] = "test_project_loop():";
 
-    for (int i = 11; i < number_test_functions; ++i) {
+    for (int i = 0; i < number_test_functions; ++i) {
         puts(name_test_functions[i]);
         if (test_functions[i]() == TEST_SUCCESS) {
             puts("Test passed successfully\n");
