@@ -14,6 +14,10 @@ enum type_instruction {
 
     COMPARE,
 
+    IF_ACMPEQ,
+    IF_ACMPNE,
+    GOTO,
+
     NEW,
     GET_FIELD,
     SET_FIELD,
@@ -40,7 +44,7 @@ struct instruction {
     long long *args;
 };
 
-void execute_instruction(instruction_t instruction);
+long long *execute_instruction(instruction_t instruction);
 
 instruction_t *constructor_instruction(long long index, type_instruction_t type, long long *args);
 

@@ -70,6 +70,15 @@ void print_name_instruction(instruction_t instruction) {
         case O_RETURN:
             printf("o_return");
             break;
+        case IF_ACMPEQ:
+            printf("if_acmpeq %lli", instruction.args[0]);
+            break;
+        case IF_ACMPNE:
+            printf("if_acmpne %lli", instruction.args[0]);
+            break;
+        case GOTO:
+            printf("goto %lli", instruction.args[0]);
+            break;
     }
 }
 
@@ -187,13 +196,28 @@ void new(frame_t *frame, instruction_t instruction, long long **work_stack, bool
     (*is_work_stack_element_object)[frame->index_first_element_work_stack] = true;
 }
 
-void execute_instruction(instruction_t instruction) {
+bool if_acmpeq(frame_t *frame, long long **work_stack) {
+    long long first_element = (*work_stack)[frame->index_first_element_work_stack];
+    long long second_element = (*work_stack)[frame->index_first_element_work_stack - 1];
+
+    frame->index_first_element_work_stack -= 2;
+
+    if (first_element - second_element == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+long long *execute_instruction(instruction_t instruction) {
     stack_frame_t *stack_frame = get_stack_frame();
     frame_t *frame = stack_frame->stack_frame[stack_frame->index_first_element_stack_frame];
     long long **local_pool = &frame->local_pool;
     long long **work_stack = &frame->work_stack;
     bool **is_work_stack_element_object = &frame->is_work_stack_element_object;
     bool **is_local_pool_element_object = &frame->is_local_pool_element_object;
+
+    long long *index_jump = NULL;
 
     switch (instruction.type_instruction) {
         case ADD:
@@ -252,6 +276,22 @@ void execute_instruction(instruction_t instruction) {
         case O_RETURN:
             oreturn(stack_frame, work_stack);
             break;
+        case IF_ACMPEQ:
+            if (if_acmpeq(frame, work_stack)) {
+                index_jump = malloc(8);
+                *index_jump = *instruction.args;
+            }
+            break;
+        case IF_ACMPNE:
+            if (!if_acmpeq(frame, work_stack)) {
+                index_jump = malloc(8);
+                *index_jump = *instruction.args;
+            }
+            break;
+        case GOTO:
+            index_jump = malloc(8);
+            *index_jump = *instruction.args;
+            break;
     }
 
     if (DEBUG || DEBUG_INSTRUCTION) {
@@ -262,4 +302,6 @@ void execute_instruction(instruction_t instruction) {
         print_local_pool(frame);
         printf("\n");
     }
+
+    return index_jump;
 }

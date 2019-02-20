@@ -136,8 +136,18 @@ test_result_t test_project_gc_tree_2() {
     }
 }
 
+test_result_t test_project_loop() {
+    start("test_project_loop.fn");
+
+    if (get_stack_frame()->frames[0]->local_pool[2] == 12) {
+        return TEST_SUCCESS;
+    } else {
+        return TEST_FAILED;
+    }
+}
+
 int main() {
-    int number_test_functions = 11;
+    int number_test_functions = 12;
     test_result_t(*test_functions[number_test_functions])();
     test_functions[0] = test_project_div_i;
     test_functions[1] = test_project_add;
@@ -150,6 +160,7 @@ int main() {
     test_functions[8] = test_project_gc;
     test_functions[9] = test_project_gc_tree_1;
     test_functions[10] = test_project_gc_tree_2;
+    test_functions[11] = test_project_loop;
 
     char *name_test_functions[number_test_functions];
     name_test_functions[0] = "test_project_div_i():";
@@ -163,8 +174,9 @@ int main() {
     name_test_functions[8] = "test_project_gc():";
     name_test_functions[9] = "test_project_gc_tree_1():";
     name_test_functions[10] = "test_project_gc_tree_2():";
+    name_test_functions[11] = "test_project_loop():";
 
-    for (int i = 0; i < number_test_functions; ++i) {
+    for (int i = 11; i < number_test_functions; ++i) {
         puts(name_test_functions[i]);
         if (test_functions[i]() == TEST_SUCCESS) {
             puts("Test passed successfully\n");

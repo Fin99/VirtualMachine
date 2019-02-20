@@ -62,6 +62,12 @@ void load_frame(pars_element_t pars_element) {
             type_instruction = I_RETURN;
         } else if (!strcmp(pars_element.args[i].name_arg, "o_return")) {
             type_instruction = O_RETURN;
+        } else if (!strcmp(pars_element.args[i].name_arg, "if_acmpeq")) {
+            type_instruction = IF_ACMPEQ;
+        } else if (!strcmp(pars_element.args[i].name_arg, "if_acmpne")) {
+            type_instruction = IF_ACMPNE;
+        } else if (!strcmp(pars_element.args[i].name_arg, "goto")) {
+            type_instruction = GOTO;
         } else {
             type_instruction = -1;
             //todo error

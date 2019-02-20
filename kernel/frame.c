@@ -38,6 +38,10 @@ void destructor_frame(frame_t *frame) {
 
 void execute_frame(frame_t *frame) {
     for (long long i = 0; i < frame->number_instructions; ++i) {
-        execute_instruction(*frame->instructions[i]);
+        long long *index_instruction = execute_instruction(*frame->instructions[i]);
+        if (index_instruction != NULL) {
+            i = *index_instruction - 1;
+            free(index_instruction);
+        }
     }
 }

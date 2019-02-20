@@ -1,0 +1,17 @@
+function void main(){
+0:const 10
+1:store 0
+2:load 0
+3:load 1
+4:if_acmpeq 14
+5:load 2
+6:const 2
+7:add
+8:store 2
+9:load 1
+10:const 1
+11:add
+12:store 1
+13:goto 2
+14:return
+}
