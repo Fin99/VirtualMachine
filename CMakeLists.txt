@@ -4,9 +4,9 @@ project(VirtualMachine C)
 set(CMAKE_CXX_STANDARD 14)
 
 set(Parser
-        src/main/parsing-bytecode/string.c src/main/parsing-bytecode/string.h
-        src/main/parsing-bytecode/file.c src/main/parsing-bytecode/file.h src/main/parsing-bytecode/pars_element.c src/main/parsing-bytecode/pars_element.h
-        src/main/parsing-bytecode/parser.c src/main/parsing-bytecode/parser.h)
+        src/main/parsing/bytecode/string.c src/main/parsing/bytecode/string.h
+        src/main/parsing/bytecode/file.c src/main/parsing/bytecode/file.h src/main/parsing/bytecode/pars_element.c src/main/parsing/bytecode/pars_element.h
+        src/main/parsing/bytecode/parser.c src/main/parsing/bytecode/parser.h)
 
 set(Kernel src/main/kernel/instruction.h src/main/kernel/instruction.c
         src/main/kernel/stack_frame.h src/main/kernel/stack_frame.c

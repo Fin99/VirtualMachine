@@ -1,0 +1,6 @@
+{
+    "mainFile" : "sum",
+    "language" : {
+        "java" : "/usr/bin/java"
+    }
+}

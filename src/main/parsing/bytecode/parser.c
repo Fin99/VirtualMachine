@@ -8,8 +8,8 @@
 #include "parser.h"
 #include "file.h"
 #include "pars_element.h"
-#include "../kernel/class.h"
-#include "../kernel/stack_frame.h"
+#include "../../kernel/class.h"
+#include "../../kernel/stack_frame.h"
 
 void load_class(struct pars_element pars_element) {
     static int count_frames = 0;
