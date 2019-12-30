@@ -4,24 +4,19 @@ project(VirtualMachine C)
 set(CMAKE_CXX_STANDARD 14)
 
 set(Parser
-        parsing-bytecode/string.c parsing-bytecode/string.h
-        parsing-bytecode/file.c parsing-bytecode/file.h parsing-bytecode/pars_element.c parsing-bytecode/pars_element.h parsing-bytecode/parser.c parsing-bytecode/parser.h)
+        src/main/parsing-bytecode/string.c src/main/parsing-bytecode/string.h
+        src/main/parsing-bytecode/file.c src/main/parsing-bytecode/file.h src/main/parsing-bytecode/pars_element.c src/main/parsing-bytecode/pars_element.h
+        src/main/parsing-bytecode/parser.c src/main/parsing-bytecode/parser.h)
 
-set(Kernel kernel/instruction.h kernel/instruction.c
-        kernel/stack_frame.h kernel/stack_frame.c
-        kernel/frame.h kernel/frame.c kernel/class.c kernel/class.h kernel/gc.h kernel/gc.c)
+set(Kernel src/main/kernel/instruction.h src/main/kernel/instruction.c
+        src/main/kernel/stack_frame.h src/main/kernel/stack_frame.c
+        src/main/kernel/frame.h src/main/kernel/frame.c src/main/kernel/class.c src/main/kernel/class.h src/main/kernel/gc.h src/main/kernel/gc.c)
 
-set(Project ${Parser} ${Kernel} vm.c vm.h)
+set(Project ${Parser} ${Kernel} src/main/vm.c src/main/vm.h)
 
-set(TestParser test/test.h
-        )
-set(TestKernel test/test.h
-        test/test_kernel.c test/test_kernel.h)
-set(TestProject ${Project} test/test_project.c test/test_project.h)
+set(TestKernel src/test/test.h src/test/test_kernel.c ${Kernel})
+set(TestProject src/test/test.h src/test/test_project.c src/test/test_project.h ${Project})
 
+add_executable(test_kernel ${TestKernel})
 
-add_executable(TestParser ${TestParser} ${Parser})
-
-add_executable(TestKernel ${TestKernel} ${Kernel})
-
-add_executable(TestProject ${TestProject} ${Project})
+add_executable(test_project ${TestProject})
