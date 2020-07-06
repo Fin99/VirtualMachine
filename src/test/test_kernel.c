@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "test.h"
-#include "../kernel/frame.h"
-#include "../kernel/stack_frame.h"
-#include "../kernel/gc.h"
+#include "../main/kernel/frame.h"
+#include "../main/kernel/stack_frame.h"
+#include "../main/kernel/gc.h"
 
 struct frame *create_test_frame_div_i() {
     int64_t *args1 = malloc(sizeof(int64_t));

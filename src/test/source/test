@@ -1,0 +1,14 @@
+num num1;
+num num2;
+
+num main() {
+   return 1;
+}
+
+void voidFun() {
+
+}
+
+object objectFun() {
+    return
+}
