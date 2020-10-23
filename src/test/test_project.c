@@ -8,9 +8,11 @@
 #include "../main/kernel/gc.h"
 #include "../main/kernel/stack_frame.h"
 #include "../main/vm.h"
+#include "../main/compiler/source/parser_source.h"
 
 enum test_result test_project_div_i() {
-    start("src/test/compile_source/test_project_div_i.fn");
+    char* compile_code = parse_source_to_bytecode("src/test/source/test_project_div_i.fn");
+    start(compile_code);
 
     struct frame *frame = find_frame("main()");
 
@@ -23,7 +25,8 @@ enum test_result test_project_div_i() {
 }
 
 enum test_result test_project_add() {
-    start("src/test/compile_source/test_project_add.fn");
+    char* compile_code = parse_source_to_bytecode("src/test/source/test_project_add.fn");
+    start(compile_code);
 
     struct frame *frame = find_frame("main()");
 
@@ -35,7 +38,8 @@ enum test_result test_project_add() {
 }
 
 enum test_result test_project_mul() {
-    start("src/test/compile_source/test_project_mul.fn");
+    char* compile_code = parse_source_to_bytecode("src/test/source/test_project_mul.fn");
+    start(compile_code);
 
     struct frame *frame = find_frame("main()");
 
@@ -47,7 +51,7 @@ enum test_result test_project_mul() {
 }
 
 enum test_result test_project_compare_1() {
-    start("src/test/compile_source/test_project_compare_1.fn");
+    start_file("src/test/compile_source/test_project_compare_1.fn");
 
     struct frame *frame = find_frame("main()");
 
@@ -59,7 +63,7 @@ enum test_result test_project_compare_1() {
 }
 
 enum test_result test_project_compare_2() {
-    start("src/test/compile_source/test_project_compare_2.fn");
+    start_file("src/test/compile_source/test_project_compare_2.fn");
 
     struct frame *frame = find_frame("main()");
 
@@ -71,7 +75,7 @@ enum test_result test_project_compare_2() {
 }
 
 enum test_result test_project_invoke() {
-    start("src/test/compile_source/test_project_invoke.fn");
+    start_file("src/test/compile_source/test_project_invoke.fn");
 
     struct frame *frame = find_frame("main()");
 
@@ -83,7 +87,7 @@ enum test_result test_project_invoke() {
 }
 
 enum test_result test_project_invoke_2() {
-    start("src/test/compile_source/test_project_invoke_2.fn");
+    start_file("src/test/compile_source/test_project_invoke_2.fn");
 
     struct frame *frame = find_frame("main()");
 
@@ -95,7 +99,7 @@ enum test_result test_project_invoke_2() {
 }
 
 enum test_result test_project_class() {
-    start("src/test/compile_source/test_project_class.fn");
+    start_file("src/test/compile_source/test_project_class.fn");
 
     struct frame *frame = find_frame("main()");
 
@@ -107,7 +111,7 @@ enum test_result test_project_class() {
 }
 
 enum test_result test_project_gc() {
-    start("src/test/compile_source/test_project_gc.fn");
+    start_file("src/test/compile_source/test_project_gc.fn");
 
     if (get_gc()->number_objects == 3) {
         return TEST_SUCCESS;
@@ -117,7 +121,7 @@ enum test_result test_project_gc() {
 }
 
 enum test_result test_project_gc_tree_1() {
-    start("src/test/compile_source/test_project_gc_tree_1.fn");
+    start_file("src/test/compile_source/test_project_gc_tree_1.fn");
 
     if (get_gc()->number_objects == 2) {
         return TEST_SUCCESS;
@@ -127,7 +131,7 @@ enum test_result test_project_gc_tree_1() {
 }
 
 enum test_result test_project_gc_tree_2() {
-    start("src/test/compile_source/test_project_gc_tree_2.fn");
+    start_file("src/test/compile_source/test_project_gc_tree_2.fn");
 
     if (get_gc()->number_objects == 1) {
         return TEST_SUCCESS;
@@ -137,7 +141,7 @@ enum test_result test_project_gc_tree_2() {
 }
 
 enum test_result test_project_loop() {
-    start("src/test/compile_source/test_project_loop.fn");
+    start_file("src/test/compile_source/test_project_loop.fn");
 
     if (get_stack_frame()->frames[0]->local_pool[2] == 20) {
         return TEST_SUCCESS;

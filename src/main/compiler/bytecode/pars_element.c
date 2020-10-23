@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include "pars_element.h"
-#include "string.h"
+#include "../commons/string.h"
 
 void destructor_pars_element(struct pars_element *pars_element, size_t number_elements) {
     for (int j = 0; j < number_elements; ++j) {

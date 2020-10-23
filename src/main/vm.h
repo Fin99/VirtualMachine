@@ -5,6 +5,8 @@
 #ifndef VIRTUALMACHINE_VM_H
 #define VIRTUALMACHINE_VM_H
 
-void start(char* file_name);
+void start_file(char* file_name);
+
+void start(char *text);
 
 #endif //VIRTUALMACHINE_VM_H

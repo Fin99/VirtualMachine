@@ -3,20 +3,24 @@ project(VirtualMachine C)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(Parser
-        src/main/parsing/bytecode/string.c src/main/parsing/bytecode/string.h
-        src/main/parsing/bytecode/file.c src/main/parsing/bytecode/file.h src/main/parsing/bytecode/pars_element.c src/main/parsing/bytecode/pars_element.h
-        src/main/parsing/bytecode/parser.c src/main/parsing/bytecode/parser.h)
+FILE(GLOB_RECURSE parser_source "src/main/compiler/source/*")
+FILE(GLOB_RECURSE parser_bytecode "src/main/compiler/bytecode/*")
+FILE(GLOB_RECURSE parser_commons "src/main/compiler/commons/*")
+FILE(GLOB_RECURSE kernel "src/main/kernel/*")
 
-set(Kernel src/main/kernel/instruction.h src/main/kernel/instruction.c
-        src/main/kernel/stack_frame.h src/main/kernel/stack_frame.c
-        src/main/kernel/frame.h src/main/kernel/frame.c src/main/kernel/class.c src/main/kernel/class.h src/main/kernel/gc.h src/main/kernel/gc.c)
+set(ParserBytecode ${parser_bytecode} ${parser_commons})
+set(ParserSource ${parser_source} ${parser_commons})
 
-set(Project ${Parser} ${Kernel} src/main/vm.c src/main/vm.h)
+set(Kernel ${kernel})
+
+set(Project ${ParserBytecode} ${ParserSource} ${Kernel} src/main/vm.c src/main/vm.h)
 
 set(TestKernel src/test/test.h src/test/test_kernel.c ${Kernel})
-set(TestProject src/test/test.h src/test/test_project.c src/test/test_project.h ${Project})
+set(TestParser src/test/test.h src/test/test_compile_source.c ${ParserSource})
+set(TestProject src/test/test.h src/test/test_project.c ${Project})
 
 add_executable(test_kernel ${TestKernel})
+
+add_executable(test_parser ${TestParser})
 
 add_executable(test_project ${TestProject})

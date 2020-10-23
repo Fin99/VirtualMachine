@@ -2,11 +2,10 @@
 // Created by fin on 29.01.19.
 //
 
-#include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
 #include "parser.h"
-#include "file.h"
+#include "../commons/file.h"
 #include "pars_element.h"
 #include "../../kernel/class.h"
 #include "../../kernel/stack_frame.h"
@@ -116,9 +115,12 @@ void load_frame(struct pars_element pars_element) {
     get_stack_frame()->frames[get_stack_frame()->number_frames++] = frame;
 }
 
-void load_class_and_frame(char *file_name) {
+void load_class_and_frame_from_file(char *file_name) {
     char *text = read_file(file_name);
+    load_class_and_frame(text);
+}
 
+void load_class_and_frame(char *text) {
     size_t number_elements;
     struct pars_element *pars_elements = pars_text(text, &number_elements);
 
